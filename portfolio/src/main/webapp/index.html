@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <meta charset="UTF-8">
     <title>My Portfolio</title>
@@ -7,12 +7,69 @@
     <script src="script.js"></script>
   </head>
   <body>
-    <div id="content">
-      <h1>My Portfolio</h1>
-      <p>This is my portfolio.</p>
-      <p>Click here to get a random message:</p>
-      <button onclick="addRandomGreeting()">Hello</button>
-      <div id="greeting-container"></div>
+    <div id="header">
+      <header>
+        <h1>Angel Guevara's Portfolio</h1>
+      </header>
+    </div>
+    <div class="row">
+      <div id="nav">
+        <nav>
+          <ul>
+            <!-- TODO: Add links to other pages -->
+            <li><a href="index.html">About me</a></li>
+            <li><a href="#">Projects</a></li>
+            <li><a href="#">Gallery</a></li>
+            <li><a href="#">Talents</a></li>
+          </ul>
+        </nav>
+      </div>
+      <div id="content">
+        <article>
+          <h2>About me</h2>
+          <p>
+            My name is Angel Guevara.
+            I am a Computer Science student at Tecnológico de Monterrey (ITESM).
+            I describe myself as someone looking always to learn and acquire
+            new knowledge and skills, and keeping improving through continuous work
+            and by learning from my peers.
+          </p>
+          <p>
+            I was first introduced to Computer Science when my father bought me
+            an Arduino, I remember the exact date, because it was my birthday.
+            It was a very cool present, I liked the electronics and programming
+            stuff. The projects were interesting and fun to do, and well, my first
+            project was the equivalent to a “Hello, World!” program, but in 
+            the electronics world, a blinking LED. I only had it that spring and
+            summer, because I moved to another city to study high school and I 
+            couldn’t bring it with me. 
+          </p>
+          <p>
+            My interest for computer science started to grow during high school.
+            I had a basic course of computational thinking and did a school project
+            using Arduino, in which in a team of 4 we built and programed a robot
+            to avoid obstacles in its way. It was in my last year of high school
+            when I decided to focus on software rather than on robotics/electronics,
+            all thanks to a competition called MIT-ZeroRobotics, in which my team
+            and I had to write a program for a SPHERE satellite in order to 
+            accomplish a specific task by controlling the satellite's speed, 
+            rotation, direction and more through our code written in C.
+          </p>
+          <p>Click here to get a random message:</p>
+          <button onclick="addRandomGreeting()">Hello</button>
+          <div id="greeting-container"></div>
+        </article>
+      </div>
+    </div>
+    <div id="footer">
+      <footer>
+        For more content:
+        <ul>
+          <li><a href="https://www.linkedin.com/in/angel-GH" target="_blank">LinkedIn</a></li>
+          <li><a href="https://www.github.com/Angel-AG" target="_blank">Github</a></li>
+          <li><a href="https://www.instagram.com/_angelgh_" target="_blank">Instagram</a></li>
+        </ul>
+      </footer>
     </div>
   </body>
 </html>

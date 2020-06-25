@@ -1,7 +1,41 @@
+* {
+  box-sizing: border-box;
+}
+
 #content {
-  margin-left: auto;
-  margin-right: auto;
-  width: 650px;
+  float: left;
+  margin: auto;
+  padding: 15px;
+  width: 75%;
+}
+
+#footer {
+  background-color: #ddd;
+  color: #000;
+  margin: auto;
+  padding: 15px;
+  width: 100%;
+}
+
+#header {
+  background-color: #006;
+  color: #fff;
+  margin: auto;
+  padding: 15px;
+  text-align: center;
+  width: 100%;
+}
+
+#nav {
+  float: left;
+  margin: auto;
+  padding: 15px;
+  width: 25%;
+}
+
+.row {
+  clear: both;
+  display: table;
 }
 
 #greeting-container {
