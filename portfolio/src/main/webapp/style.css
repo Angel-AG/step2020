@@ -33,7 +33,8 @@
   width: 25%;
 }
 
-.row {
+.row::after {
+  content: "";
   clear: both;
   display: table;
 }
