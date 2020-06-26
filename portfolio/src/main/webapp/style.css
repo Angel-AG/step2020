@@ -38,6 +38,12 @@
   max-width: 300px;
 }
 
+#button-container {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+} 
+
 .list-title {
   font-weight: bold;
   font-size: large;
@@ -64,6 +70,6 @@
   display: table;
 }
 
-#greeting-container {
-  margin-top: 20px;
+#random-image-container {
+  margin: 10px;
 }
