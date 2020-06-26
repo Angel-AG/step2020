@@ -26,6 +26,11 @@
   width: 100%;
 }
 
+.list-title {
+  font-weight: bold;
+  font-size: large;
+}
+
 #nav {
   float: left;
   margin: auto;
@@ -33,7 +38,8 @@
   width: 25%;
 }
 
-.row {
+.row::after {
+  content: "";
   clear: both;
   display: table;
 }
