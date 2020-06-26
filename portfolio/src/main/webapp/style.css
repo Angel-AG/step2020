@@ -50,6 +50,14 @@
   width: 25%;
 }
 
+.profile-pic {
+  border-radius: 50%;
+  float: left;
+  margin: 10px;
+  max-height: 150px;
+  max-width: 150px;
+}
+
 .row::after {
   content: "";
   clear: both;
