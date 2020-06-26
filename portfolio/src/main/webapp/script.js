@@ -58,16 +58,14 @@ const RANDOM_DOG_PICS = [
 ];
 
 /**
- * Adds a random greeting to the page.
+ * Adds a random picture of a dog to the page.
  */
-function addRandomGreeting() {
-  const greetings =
-      ['Hello world!', '¡Hola Mundo!', '你好，世界！', 'Bonjour le monde!'];
-
-  // Pick a random greeting.
-  const greeting = greetings[Math.floor(Math.random() * greetings.length)];
+function addRandomDogPic() {
+  // Pick a random picture.
+  const randomDogPic = RANDOM_DOG_PICS[Math.floor(Math.random() * RANDOM_DOG_PICS.length)];
 
   // Add it to the page.
-  const greetingContainer = document.getElementById('greeting-container');
-  greetingContainer.innerText = greeting;
+  const randomImage = document.getElementById('randomImg');
+  randomImage.src = randomDogPic.source;
+  randomImage.alt = randomDogPic.alt;
 }
