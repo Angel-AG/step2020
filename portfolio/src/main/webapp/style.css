@@ -26,6 +26,11 @@
   width: 100%;
 }
 
+.list-title {
+  font-weight: bold;
+  font-size: large;
+}
+
 #nav {
   float: left;
   margin: auto;
