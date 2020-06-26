@@ -14,7 +14,7 @@
 
 /**
  * An array of dog pics' source and alternative text
- * @const {Array.<{source: string, alt: string}>}
+ * @const {!Array<{source: string, alt: string}>}
  */
 const RANDOM_DOG_PICS = [
   {
