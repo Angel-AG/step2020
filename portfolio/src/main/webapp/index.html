@@ -16,11 +16,10 @@
       <div id="nav">
         <nav>
           <ul>
-            <!-- TODO: Add links to other pages -->
             <li><a href="index.html">About me</a></li>
-            <li><a href="#">Projects</a></li>
-            <li><a href="#">Gallery</a></li>
-            <li><a href="#">Talents</a></li>
+            <li><a href="projects.html">Projects</a></li>
+            <li><a href="gallery.html">Gallery</a></li>
+            <li><a href="talents.html">Talents</a></li>
           </ul>
         </nav>
       </div>
@@ -28,6 +27,9 @@
         <article>
           <h2>About me</h2>
           <p>
+            <img class="profile-pic" src="/images/AngelPic.jpg"
+                alt="Picture of Angel. Wearing glasses, smiling gently
+                and resting his face on his hand">
             My name is Angel Guevara.
             I am a Computer Science student at Tecnológico de Monterrey (ITESM).
             I describe myself as someone looking always to learn and acquire
@@ -55,9 +57,13 @@
             accomplish a specific task by controlling the satellite's speed, 
             rotation, direction and more through our code written in C.
           </p>
-          <p>Click here to get a random message:</p>
-          <button onclick="addRandomGreeting()">Hello</button>
-          <div id="greeting-container"></div>
+          <p>I have also two dogs, Fifi, a chihuaha, and Laika, a beagle.</p>
+          <div id="button-container">
+            <button onclick="addRandomDogPic()">Click for a random pic of my dogs!</button>
+          </div>
+          <div id="random-image-container" class="image-thumbnails">
+            <img id="randomImg">
+          </div>
         </article>
       </div>
     </div>

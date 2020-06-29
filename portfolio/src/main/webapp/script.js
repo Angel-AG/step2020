@@ -13,16 +13,59 @@
 // limitations under the License.
 
 /**
- * Adds a random greeting to the page.
+ * An array of dog pics' source and alternative text
+ * @const {!Array<{source: string, alt: string}>}
  */
-function addRandomGreeting() {
-  const greetings =
-      ['Hello world!', '¡Hola Mundo!', '你好，世界！', 'Bonjour le monde!'];
+const RANDOM_DOG_PICS = [
+  {
+    source: '/images/FifiAndPanda.jpg',
+    alt: 'Fifi and Panda. In front, in the lower left corner a toy panda ' + 
+        'waving his hand. In the back, a sleeping white and cream chihuaha.'
+  },
+  {
+    source: '/images/HappyFifi.jpg',
+    alt: 'Happy Fifi. In the center, a white and cream chihuahua being ' + 
+        'petted on the head.'
+  },
+  {
+    source: '/images/FifiLooksAtPanda.jpg',
+    alt: 'Fifi looking at Panda. In front, in the lower left corner a ' + 
+        'toy panda. In the back, a white and cream chihuaha looking at ' + 
+        'the toy panda.'
+  },
+  {
+    source: '/images/DogsHouse.jpg',
+    alt: 'A dog house, two dogs inside it. A sleeping brown and white ' + 
+        'beagle and a white and cream chihuaha looking to the camera. ' + 
+        'Outside, a sunny day and flower pots.'
+  },
+  {
+    source: '/images/ProfileLaika.jpg',
+    alt: 'Laika. A close look from bottom to top of a brown and white ' + 
+        'beagle head inside a living room.'
+  },
+  {
+    source: '/images/BeautifulLaika.jpg',
+    alt: 'Laika. A close look from a side of a brown and white beagle ' + 
+        'head with his mouth open and tongue out.'
+  },
+  {
+    source: '/images/PandaHugsLaika.jpg',
+    alt: 'Panda hugging Laika. A toy panda hugging a brown and white ' + 
+        'beagle lying in the floor. The toy panda is small, it is ' + 
+        'hugging the ear of the dog.'
+  }
+];
 
-  // Pick a random greeting.
-  const greeting = greetings[Math.floor(Math.random() * greetings.length)];
+/**
+ * Adds a random picture of a dog to the page.
+ */
+function addRandomDogPic() {
+  // Pick a random picture.
+  const randomDogPic = RANDOM_DOG_PICS[Math.floor(Math.random() * RANDOM_DOG_PICS.length)];
 
   // Add it to the page.
-  const greetingContainer = document.getElementById('greeting-container');
-  greetingContainer.innerText = greeting;
+  const randomImage = document.getElementById('randomImg');
+  randomImage.src = randomDogPic.source;
+  randomImage.alt = randomDogPic.alt;
 }
