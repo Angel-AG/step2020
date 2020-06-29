@@ -22,18 +22,21 @@ function includeHtml() {
     // Get the file name
     const path = element.getAttribute("include-html");
     
-    // Make an HTTP Request for the HTML file
-    const xmlHttp = new XMLHttpRequest();
-    xmlHttp.onreadystatechange = function() {
-      if (xmlHttp.readyState === 4) {
-        if (xmlHttp.status === 200) {element.innerHTML = xmlHttp.responseText;};
-        if (xmlHttp.status === 404) {element.innerHTML = "Page not found";};
+    // Check path is not an empty string
+    if (path) {
+      // Make an HTTP Request for the HTML file
+      const xmlHttp = new XMLHttpRequest();
+      xmlHttp.onreadystatechange = function() {
+        if (xmlHttp.readyState === 4) {
+          if (xmlHttp.status === 200) {element.innerHTML = xmlHttp.responseText;};
+          if (xmlHttp.status === 404) {element.innerHTML = "Page not found";};
         
-        element.removeAttribute("include-html");
-      }
-    };
-    xmlHttp.open("GET", path, true);
-    xmlHttp.send();
+          element.removeAttribute("include-html");
+        }
+      };
+      xmlHttp.open("GET", path, true);
+      xmlHttp.send();
+    }
   }
 }
 
