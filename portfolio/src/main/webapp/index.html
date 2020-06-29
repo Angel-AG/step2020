@@ -7,22 +7,9 @@
     <script src="script.js"></script>
   </head>
   <body>
-    <div id="header">
-      <header>
-        <h1>Angel Guevara's Portfolio</h1>
-      </header>
-    </div>
+    <div id="header" include-html="header.html"></div>
     <div class="row">
-      <div id="nav">
-        <nav>
-          <ul>
-            <li><a href="index.html">About me</a></li>
-            <li><a href="projects.html">Projects</a></li>
-            <li><a href="gallery.html">Gallery</a></li>
-            <li><a href="talents.html">Talents</a></li>
-          </ul>
-        </nav>
-      </div>
+      <div id="nav" include-html="navbar.html"></div>
       <div id="content">
         <article>
           <h2>About me</h2>
@@ -67,15 +54,7 @@
         </article>
       </div>
     </div>
-    <div id="footer">
-      <footer>
-        For more content:
-        <ul>
-          <li><a href="https://www.linkedin.com/in/angel-GH" target="_blank">LinkedIn</a></li>
-          <li><a href="https://www.github.com/Angel-AG" target="_blank">Github</a></li>
-          <li><a href="https://www.instagram.com/_angelgh_" target="_blank">Instagram</a></li>
-        </ul>
-      </footer>
-    </div>
+    <div id="footer" include-html="footer.html"></div>
+    <script src="reusehtml.js"></script>
   </body>
 </html>
