@@ -35,7 +35,7 @@ function alterHtml(xmlHttp, element) {
     } else if (xmlHttp.status === 0) {
       element.innerHTML = "Timeout. Unable to reach server";
     } else {
-      element.innerHTML = "Something unexpected ocurred " + 
+      element.innerHTML = "Something unexpected occurred " + 
       xmlHttp.status + " " + xmlHttp.statusText;
     }
     
@@ -59,7 +59,7 @@ function requestHtmlFile(htmlElement, htmlPath, timeoutFunc) {
   xmlHttp.open("GET", htmlPath, true);
 
   xmlHttp.onerror = () => {
-    alert("Sorry. An error ocurred during the request");
+    alert("Sorry. An error occurred during the request");
   };
   
   xmlHttp.timeout = 5000; // milliseconds 
