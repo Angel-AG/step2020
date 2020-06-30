@@ -36,7 +36,7 @@ function alterHtml(xmlHttp, element) {
       element.innerHTML = "Timeout. Unable to reach server";
     } else {
       element.innerHTML = "Something unexpected occurred " + 
-      xmlHttp.status + " " + xmlHttp.statusText;
+          xmlHttp.status + " " + xmlHttp.statusText;
     }
     
     element.removeAttribute("include-html");
