@@ -72,9 +72,9 @@ function requestHtmlFile(htmlElement, htmlPath, timeoutFunc) {
  * Adds HTML content to elements with the include-html attribute
  */
 function includeHtml() {
-  const elementsWithIncludeAttr = document.querySelectorAll("[include-html]");
+  const elements = document.querySelectorAll("[include-html]");
 
-  for (const element of elementsWithIncludeAttr) {
+  for (const element of elements) {
     // Get the file name
     const path = element.getAttribute("include-html");
     
