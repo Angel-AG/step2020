@@ -17,6 +17,8 @@ package com.google.sps.servlets;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.Query;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -30,19 +32,24 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
 
-  private List<String> comments;
-
-  @Override
-  public void init() {
-    comments = new ArrayList<>();
-  }
-
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String commentsJson = convertListToJson(comments);
+    Query fetchComments = new Query("Comment");
+
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    PreparedQuery commentsRetrieved = datastore.prepare(fetchComments);
+
+    // TODO: Create a Comment class
+    List<String> comments = new ArrayList<>();
+    for (Entity commentEntity : commentsRetrieved.asIterable()) {
+      String username = (String) commentEntity.getProperty("username");
+      String comment = (String) commentEntity.getProperty("comment");
+
+      comments.add(username + " wrote: " + comment);
+    }
 
     response.setContentType("application/json;");
-    response.getWriter().println(commentsJson);
+    response.getWriter().println(convertListToJson(comments));
   }
 
   @Override
@@ -63,7 +70,6 @@ public class DataServlet extends HttpServlet {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     datastore.put(commentEntity);    
 
-    comments.add(username + " wrote: " + comment);
     response.sendRedirect("/gallery.html");
   }
 
