@@ -13,12 +13,24 @@
 // limitations under the License.
 
 /**
- * Fetches a 'Hello Angel! from the server and adds it to the DOM.
+ * Fetches comments from the server and adds it to the DOM.
  */
-function printHello() {
-  fetch('/data').then(response => response.text()).then((greeting) => {
-    document.getElementById('hello-container').innerHTML = greeting;
+function getComments() {
+  fetch('/data').then(response => response.json()).then((comments) => {
+    const commentsContainer = document.getElementById('comments-container');
+
+    commentsContainer.innerHTML = '';
+    for (const comment of comments) {
+      commentsContainer.appendChild(createListElement(comment));
+    }
   });
 }
 
-document.body.onload = printHello;
+/** Creates an <li> element containing text. */
+function createListElement(text) {
+  const liElement = document.createElement('li');
+  liElement.innerText = text;
+  return liElement;
+}
+
+document.body.onload = getComments;
