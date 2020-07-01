@@ -48,10 +48,19 @@
                 alt="Panda hugging Laika. A toy panda hugging a brown and white beagle
                 lying in the floor. The toy panda is small, it is hugging the ear of the dog.">
           </div>
+          <form action="/comments" method="POST">
+            <label for="username">Name (empty field will be anonymous):</label>
+            <input type="text" id="username" name="username" placeholder="Add a name to your comment here!">
+            <label for="comment">Leave your comment:</label>
+            <textarea id="comment" name="comment" placeholder="Write (nice) comments! ;)"></textarea>
+            <input type="submit">
+          </form>
+          <div id="comments-container"></div>
         </article>
       </div>
     </div>
     <div id="footer" include-html="footer.html"></div>
     <script src="reusehtml.js"></script>
+    <script src="comments.js"></script>
   </body>
 </html>

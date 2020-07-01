@@ -26,20 +26,20 @@
  */
 function alterHtml(xmlHttp, element) {
   if (xmlHttp.readyState < 4) {
-    element.innerHTML = "Loading...";
+    element.innerHTML = 'Loading...';
   } else if (xmlHttp.readyState === 4) {
     if (xmlHttp.status === 200) {
       element.innerHTML = xmlHttp.responseText;
     } else if (xmlHttp.status === 404) {
-      element.innerHTML = "Page not found";
+      element.innerHTML = 'Page not found';
     } else if (xmlHttp.status === 0) {
-      element.innerHTML = "Timeout. Unable to reach server";
+      element.innerHTML = 'Timeout. Unable to reach server';
     } else {
-      element.innerHTML = "Something unexpected occurred " + 
-          xmlHttp.status + " " + xmlHttp.statusText;
+      element.innerHTML = 'Something unexpected occurred ' + 
+          xmlHttp.status + ' ' + xmlHttp.statusText;
     }
     
-    element.removeAttribute("include-html");
+    element.removeAttribute('include-html');
   }
 }
 
@@ -56,10 +56,10 @@ function requestHtmlFile(htmlElement, htmlPath, timeoutFunc) {
     alterHtml(xmlHttp, htmlElement);
   };
 
-  xmlHttp.open("GET", htmlPath, true);
+  xmlHttp.open('GET', htmlPath, true);
 
   xmlHttp.onerror = () => {
-    alert("Sorry. An error occurred during the request");
+    alert('Sorry. An error occurred during the request');
   };
   
   xmlHttp.timeout = 5000; // milliseconds 
@@ -72,11 +72,11 @@ function requestHtmlFile(htmlElement, htmlPath, timeoutFunc) {
  * Adds HTML content to elements with the include-html attribute
  */
 function includeHtml() {
-  const elements = document.querySelectorAll("[include-html]");
+  const elements = document.querySelectorAll('[include-html]');
 
   for (const element of elements) {
     // Get the file name
-    const path = element.getAttribute("include-html");
+    const path = element.getAttribute('include-html');
     
     // Check path is not an empty string
     if (path) {
@@ -90,6 +90,6 @@ function includeHtml() {
 /**
  * Listens to when the HTML document has been completely loaded and parsed
  */
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener('DOMContentLoaded', () => {
   includeHtml();
 });
