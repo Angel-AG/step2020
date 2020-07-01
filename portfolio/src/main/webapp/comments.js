@@ -16,7 +16,7 @@
  * Fetches comments from the server and adds it to the DOM.
  */
 function getComments() {
-  fetch('/data').then(response => response.json()).then((comments) => {
+  fetch('/comments').then(response => response.json()).then((comments) => {
     const commentsContainer = document.getElementById('comments-container');
 
     commentsContainer.innerHTML = '';
