@@ -32,9 +32,6 @@ public class DataServlet extends HttpServlet {
   @Override
   public void init() {
     comments = new ArrayList<>();
-    comments.add("I did not know Guava was Guayaba in English lol");
-    comments.add("Cute, cute, cute dogs! *o*");
-    comments.add("Uno, dos... nueve fotos, se contar :D");
   }
 
   @Override
@@ -45,11 +42,38 @@ public class DataServlet extends HttpServlet {
     response.getWriter().println(commentsJson);
   }
 
+  @Override
+  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    String username = getParameter(request, "username", "Anonymous");
+    String comment = getParameter(request, "comment", "");
+
+    if (comment.isEmpty()) {
+      // TODO: Create error feedback for client
+      response.sendRedirect("/gallery.html");
+      return;
+    }
+
+    comments.add(username + " wrote: " + comment);
+    response.sendRedirect("/gallery.html");
+  }
+
   /**
    * Converts a list into a JSON string using the Gson library.
    */
   private String convertListToJson(List list) {
     Gson gson = new Gson();
     return gson.toJson(list);
+  }
+
+  /**
+   * Return the request parameter or the default value if the parameter
+   * was not specified by the client
+   */
+  private String getParameter(HttpServletRequest request, String name, String defaultValue) {
+    String value = request.getParameter(name);
+    if (value.isEmpty()) {
+      return defaultValue;
+    }
+    return value;
   }
 }
