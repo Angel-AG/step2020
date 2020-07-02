@@ -55,7 +55,16 @@
             <textarea id="comment" name="comment" placeholder="Write (nice) comments! ;)"></textarea>
             <input type="submit">
           </form>
-          <div id="comments-container"></div>
+          <div id="comments-container">
+            <template id="comment-card">
+              <div class="card">
+                <h4 class="card-title"></h4>
+                <span class="card-date"></span>
+                <hr class="card-hr">
+                <p class="card-text"></p>
+              </div>
+            </template>
+          </div>
         </article>
       </div>
     </div>

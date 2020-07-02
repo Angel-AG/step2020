@@ -17,21 +17,29 @@
  */
 function getComments() {
   fetch('/comments').then(response => response.json()).then((comments) => {
-    const commentsContainer = document.getElementById('comments-container');
+    const commentsContainer = document.querySelector('#comments-container');
 
-    commentsContainer.innerHTML = '';
-    for (const comment of comments) {
-      commentsContainer.appendChild(createListElement(comment));
-    }
+    addCommentsToDom(comments, commentsContainer);
   });
 }
 
-/** Creates an <li> element containing a comment. */
-function createListElement(comment) {
-  const liElement = document.createElement('li');
-  liElement.innerText = comment.username + '(' + comment.date + ') ' +
-      'wrote: ' + comment.comment;
-  return liElement;
+/**
+ * Adds comments to a container using a template
+ * @param {!Array<{Object}>} comments The comments to add
+ * @param {Object} container The container to place comments inside
+ */
+function addCommentsToDom(comments, container) {
+  const commentTemplate = document.querySelector('#comment-card');
+
+  for (const comment of comments) {
+    const newComment = commentTemplate.content.cloneNode(true);
+
+    newComment.querySelector('h4').textContent = comment.username;
+    newComment.querySelector('span').textContent = comment.date;
+    newComment.querySelector('p').textContent = comment.comment;
+
+    container.appendChild(newComment);
+  }
 }
 
 document.body.onload = getComments;
