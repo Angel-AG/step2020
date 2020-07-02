@@ -15,12 +15,29 @@
 /**
  * Fetches comments from the server and adds it to the DOM.
  */
-function getComments() {
-  fetch('/comments').then(response => response.json()).then((comments) => {
-    const commentsContainer = document.querySelector('#comments-container');
+function getComments(event) {
+  let url = '/comments';
+  if (event.currentTarget.value !== undefined) {
+    url = url + '?' + 
+        event.currentTarget.name + '=' + event.currentTarget.value;
+  }
 
+  fetch(url).then(response => response.json()).then((comments) => {
+    const commentsContainer = document.querySelector('#comments-container');
+    
+    removeNodeChildren(commentsContainer);
     addCommentsToDom(comments, commentsContainer);
   });
+}
+
+/**
+ * Remove children of a HTML node
+ * @param {Object} node The HTML node, element.
+ */
+function removeNodeChildren(node) {
+  while (node.firstChild) {
+    node.removeChild(node.lastChild);
+  }
 }
 
 /**
@@ -43,3 +60,4 @@ function addCommentsToDom(comments, container) {
 }
 
 document.body.onload = getComments;
+document.getElementById("quantity").onchange = getComments;
