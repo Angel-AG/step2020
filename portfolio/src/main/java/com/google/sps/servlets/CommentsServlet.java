@@ -17,6 +17,7 @@ package com.google.sps.servlets;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
@@ -35,15 +36,23 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/comments")
 public class CommentsServlet extends HttpServlet {
 
+  private int fetchQuantity;
+
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    Query fetchComments = new Query("Comment").addSort("date", SortDirection.DESCENDING);;
+    String quantity = getParameter(request, "quantity", "");
+    if (quantity.isEmpty()) {
+      fetchQuantity = 5;
+    } else {
+      fetchQuantity = Integer.parseInt(quantity);
+    }
 
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    PreparedQuery commentsRetrieved = datastore.prepare(fetchComments);
+    Query fetchComments = new Query("Comment").addSort("date", SortDirection.DESCENDING);
+
+    Iterable<Entity> commentsRetrieved = retrieveComments(fetchComments, fetchQuantity);
 
     List<Comment> comments = new ArrayList<>();
-    for (Entity commentEntity : commentsRetrieved.asIterable()) {
+    for (Entity commentEntity : commentsRetrieved) {
       long id = commentEntity.getKey().getId();
       String username = (String) commentEntity.getProperty("username");
       String comment = (String) commentEntity.getProperty("comment");
@@ -93,9 +102,17 @@ public class CommentsServlet extends HttpServlet {
    */
   private String getParameter(HttpServletRequest request, String name, String defaultValue) {
     String value = request.getParameter(name);
-    if (value.isEmpty()) {
+    if (value == null || value.isEmpty()) {
       return defaultValue;
     }
     return value;
+  }
+
+  /**
+   * Return the results of a query with a limit
+   */
+  private Iterable<Entity> retrieveComments(Query fetchComments, int quantity) {
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    return datastore.prepare(fetchComments).asIterable(FetchOptions.Builder.withLimit(quantity));
   }
 }
