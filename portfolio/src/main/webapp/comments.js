@@ -26,10 +26,11 @@ function getComments() {
   });
 }
 
-/** Creates an <li> element containing text. */
-function createListElement(text) {
+/** Creates an <li> element containing a comment. */
+function createListElement(comment) {
   const liElement = document.createElement('li');
-  liElement.innerText = text;
+  liElement.innerText = comment.username + '(' + comment.date + ') ' +
+      'wrote: ' + comment.comment;
   return liElement;
 }
 

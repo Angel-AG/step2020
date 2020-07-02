@@ -19,9 +19,12 @@ import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.gson.Gson;
+import com.google.sps.data.Comment;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -34,18 +37,19 @@ public class CommentsServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    Query fetchComments = new Query("Comment");
+    Query fetchComments = new Query("Comment").addSort("date", SortDirection.DESCENDING);;
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery commentsRetrieved = datastore.prepare(fetchComments);
 
-    // TODO: Create a Comment class
-    List<String> comments = new ArrayList<>();
+    List<Comment> comments = new ArrayList<>();
     for (Entity commentEntity : commentsRetrieved.asIterable()) {
+      long id = commentEntity.getKey().getId();
       String username = (String) commentEntity.getProperty("username");
       String comment = (String) commentEntity.getProperty("comment");
+      Date date = (Date) commentEntity.getProperty("date");
 
-      comments.add(username + " wrote: " + comment);
+      comments.add(new Comment(id, username, comment, date));
     }
 
     response.setContentType("application/json;");
@@ -56,6 +60,7 @@ public class CommentsServlet extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String username = getParameter(request, "username", "Anonymous");
     String comment = getParameter(request, "comment", "");
+    Date date = new Date();
 
     if (comment.isEmpty()) {
       // TODO: Create error feedback for client
@@ -66,6 +71,7 @@ public class CommentsServlet extends HttpServlet {
     Entity commentEntity = new Entity("Comment");
     commentEntity.setProperty("username", username);
     commentEntity.setProperty("comment", comment);
+    commentEntity.setProperty("date", date);
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     datastore.put(commentEntity);    
