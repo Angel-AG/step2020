@@ -33,6 +33,20 @@
   width: 75%;
 }
 
+#delete-comments {
+  background-color: white;
+  border: 2px solid #f44336;
+  border-radius: 12px;
+  color: black;
+  padding: 14px 30px;
+  transition-duration: 0.4s;
+}
+
+#delete-comments:hover {
+  background-color: #f44336;
+  color: white;
+}
+
 #footer {
   background-color: #ddd;
   color: #000;
