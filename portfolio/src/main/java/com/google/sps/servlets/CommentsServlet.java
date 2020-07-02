@@ -36,30 +36,25 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/comments")
 public class CommentsServlet extends HttpServlet {
 
+  // GET parameters
   private int fetchQuantity;
+  private boolean isOrderByDate;
+
+  @Override
+  public void init() {
+    fetchQuantity = 5;
+    isOrderByDate = true;
+  }
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String quantity = getParameter(request, "quantity", "");
-    if (quantity.isEmpty()) {
-      fetchQuantity = 5;
-    } else {
-      fetchQuantity = Integer.parseInt(quantity);
-    }
+    handleGetParams(request);
 
-    Query fetchComments = new Query("Comment").addSort("date", SortDirection.DESCENDING);
+    Query fetchComments = buildQuery();
 
     Iterable<Entity> commentsRetrieved = retrieveComments(fetchComments, fetchQuantity);
 
-    List<Comment> comments = new ArrayList<>();
-    for (Entity commentEntity : commentsRetrieved) {
-      long id = commentEntity.getKey().getId();
-      String username = (String) commentEntity.getProperty("username");
-      String comment = (String) commentEntity.getProperty("comment");
-      Date date = (Date) commentEntity.getProperty("date");
-
-      comments.add(new Comment(id, username, comment, date));
-    }
+    List<Comment> comments = createCommentsList(commentsRetrieved);
 
     response.setContentType("application/json;");
     response.getWriter().println(convertListToJson(comments));
@@ -89,6 +84,21 @@ public class CommentsServlet extends HttpServlet {
   }
 
   /**
+   * Construct a query according to the parameters' values
+   */
+  private Query buildQuery() {
+    Query query = new Query("Comment");
+    
+    if (isOrderByDate) {
+      query.addSort("date", SortDirection.DESCENDING);
+    } else {
+      query.addSort("date", SortDirection.ASCENDING);
+    }
+
+    return query;
+  }
+
+  /**
    * Converts a list into a JSON string using the Gson library.
    */
   private String convertListToJson(List list) {
@@ -96,6 +106,23 @@ public class CommentsServlet extends HttpServlet {
     return gson.toJson(list);
   }
 
+  /**
+   * Return a List with comments retrieved by a query
+   */
+  private List<Comment> createCommentsList(Iterable<Entity> commentsRetrieved) {
+    List<Comment> comments = new ArrayList<>();
+    for (Entity commentEntity : commentsRetrieved) {
+      long id = commentEntity.getKey().getId();
+      String username = (String) commentEntity.getProperty("username");
+      String comment = (String) commentEntity.getProperty("comment");
+      Date date = (Date) commentEntity.getProperty("date");
+
+      comments.add(new Comment(id, username, comment, date));
+    }
+
+    return comments;
+  }
+  
   /**
    * Return the request parameter or the default value if the parameter
    * was not specified by the client
@@ -109,9 +136,30 @@ public class CommentsServlet extends HttpServlet {
   }
 
   /**
+   * Get and assign parameters of a request
+   */
+  private void handleGetParams(HttpServletRequest request) {
+    String quantity = getParameter(request, "quantity", "");
+    if (quantity.isEmpty()) {
+      fetchQuantity = 5;
+    } else {
+      fetchQuantity = Integer.parseInt(quantity);
+    }
+
+    String dateOrder = getParameter(request, "dateOrder", "");
+    if (dateOrder.isEmpty()) {
+      isOrderByDate = false;
+    } else {
+      isOrderByDate = Boolean.parseBoolean(dateOrder);
+    }
+  }
+
+  /**
    * Return the results of a query with a limit
    */
   private Iterable<Entity> retrieveComments(Query fetchComments, int quantity) {
+    if (quantity < 0) {quantity = 0;}
+
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     return datastore.prepare(fetchComments).asIterable(FetchOptions.Builder.withLimit(quantity));
   }
