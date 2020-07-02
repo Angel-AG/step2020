@@ -13,14 +13,19 @@
 // limitations under the License.
 
 /**
+ * An object to manage the query string of a URL
+ * @const {URLSearchParams}
+ */
+const GET_PARAMS = new URLSearchParams ({
+  quantity: '5',
+  dateOrder: 'true'
+});
+
+/**
  * Fetches comments from the server and adds it to the DOM.
  */
-function getComments(event) {
-  let url = '/comments';
-  if (event.currentTarget.value !== undefined) {
-    url = url + '?' + 
-        event.currentTarget.name + '=' + event.currentTarget.value;
-  }
+function getComments() {
+  const url = '/comments?' + GET_PARAMS.toString();
 
   fetch(url).then(response => response.json()).then((comments) => {
     const commentsContainer = document.querySelector('#comments-container');
@@ -59,5 +64,19 @@ function addCommentsToDom(comments, container) {
   }
 }
 
-document.body.onload = getComments;
-document.getElementById("quantity").onchange = getComments;
+// Get comments when body is loaded
+document.body.onload = () => {
+  // Listen to changes in the quantity of comments to display
+  document.getElementById("quantity").onchange = (event) => {
+    GET_PARAMS.set('quantity', event.currentTarget.value);
+    getComments();
+  };
+
+  // Listen to changes in the order to display comments
+  document.getElementById("dateOrder").onchange = (event) => {
+    GET_PARAMS.set('dateOrder', event.currentTarget.checked);
+    getComments();
+  };
+
+  getComments();
+}
