@@ -55,16 +55,24 @@
             <textarea id="comment" name="comment" placeholder="Write (nice) comments! ;)"></textarea>
             <input type="submit">
           </form>
-          <div id="comments-container">
-            <template id="comment-card">
-              <div class="card">
-                <h4 class="card-title"></h4>
-                <span class="card-date"></span>
-                <hr class="card-hr">
-                <p class="card-text"></p>
-              </div>
-            </template>
-          </div>
+          <form action="/comments" method="GET">
+            <label for="quantity">How many comments?</label>
+            <select id="quantity" name="quantity">
+              <option value="5">5</option>
+              <option value="10">10</option>
+              <option value="15">15</option>
+              <option value="20">20</option>
+            </select>
+          </form>
+          <div id="comments-container"></div>
+          <template id="comment-card">
+            <div class="card">
+              <h4 class="card-title"></h4>
+              <span class="card-date"></span>
+              <hr class="card-hr">
+              <p class="card-text"></p>
+            </div>
+          </template>
         </article>
       </div>
     </div>
