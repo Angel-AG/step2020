@@ -87,9 +87,11 @@ function includeHtml() {
   }
 }
 
-/**
- * Listens to when the HTML document has been completely loaded and parsed
- */
-document.addEventListener('DOMContentLoaded', () => {
+// Include reuse HTML content when DOM is loaded
+if (document.readyState === 'loading') {
+  // loading yet, wait for the event
+  document.addEventListener('DOMContentLoaded', includeHtml);
+} else {
+  // DOM is ready!
   includeHtml();
-});
+}

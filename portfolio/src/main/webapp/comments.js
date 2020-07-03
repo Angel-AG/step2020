@@ -64,8 +64,7 @@ function addCommentsToDom(comments, container) {
   }
 }
 
-// Get comments when body is loaded
-document.body.onload = () => {
+function setUpComments() {
   // Listen to changes in the quantity of comments to display
   document.getElementById("quantity").onchange = (event) => {
     GET_PARAMS.set('quantity', event.currentTarget.value);
@@ -79,4 +78,13 @@ document.body.onload = () => {
   };
 
   getComments();
+}
+
+// Set up comments when DOM is loaded
+if (document.readyState === 'loading') {
+  // loading yet, wait for the event
+  document.addEventListener('DOMContentLoaded', setUpComments);
+} else {
+  // DOM is ready!
+  setUpComments();
 }
