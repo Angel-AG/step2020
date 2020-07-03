@@ -22,6 +22,13 @@ const GET_PARAMS = new URLSearchParams ({
 });
 
 /**
+ * Delete all the comments
+ */
+function deleteAllComments() {
+  fetch('delete-comments', {method: 'POST'}).then(getComments);
+}
+
+/**
  * Fetches comments from the server and adds it to the DOM.
  */
 function getComments() {
@@ -76,6 +83,8 @@ function setUpComments() {
     GET_PARAMS.set('dateOrder', event.currentTarget.checked);
     getComments();
   };
+
+  document.getElementById('delete-comments').onclick = deleteAllComments;
 
   getComments();
 }
