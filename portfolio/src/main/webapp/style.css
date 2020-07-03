@@ -2,6 +2,30 @@
   box-sizing: border-box;
 }
 
+.card {
+  border: 1px solid lightskyblue;
+  border-radius: 25px;
+  margin: 5px;
+  padding: 10px;
+}
+
+.card-date {
+  color: grey;
+  font-size: smaller;
+}
+
+.card-hr {
+  border: .5px solid lightgrey;
+}
+
+.card-text {
+  margin: .5em 0;
+}
+
+.card-title {
+  margin: 1px;
+}
+
 #content {
   float: left;
   margin: auto;

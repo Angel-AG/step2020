@@ -13,24 +13,70 @@
 // limitations under the License.
 
 /**
+ * An object to manage the query string of a URL
+ * @const {URLSearchParams}
+ */
+const GET_PARAMS = new URLSearchParams ({
+  quantity: '5',
+  dateOrder: 'true'
+});
+
+/**
  * Fetches comments from the server and adds it to the DOM.
  */
 function getComments() {
-  fetch('/comments').then(response => response.json()).then((comments) => {
-    const commentsContainer = document.getElementById('comments-container');
+  const url = '/comments?' + GET_PARAMS.toString();
 
-    commentsContainer.innerHTML = '';
-    for (const comment of comments) {
-      commentsContainer.appendChild(createListElement(comment));
-    }
+  fetch(url).then(response => response.json()).then((comments) => {
+    const commentsContainer = document.querySelector('#comments-container');
+    
+    removeNodeChildren(commentsContainer);
+    addCommentsToDom(comments, commentsContainer);
   });
 }
 
-/** Creates an <li> element containing text. */
-function createListElement(text) {
-  const liElement = document.createElement('li');
-  liElement.innerText = text;
-  return liElement;
+/**
+ * Remove children of a HTML node
+ * @param {Object} node The HTML node, element.
+ */
+function removeNodeChildren(node) {
+  while (node.firstChild) {
+    node.removeChild(node.lastChild);
+  }
 }
 
-document.body.onload = getComments;
+/**
+ * Adds comments to a container using a template
+ * @param {!Array<{Object}>} comments The comments to add
+ * @param {Object} container The container to place comments inside
+ */
+function addCommentsToDom(comments, container) {
+  const commentTemplate = document.querySelector('#comment-card');
+
+  for (const comment of comments) {
+    const newComment = commentTemplate.content.cloneNode(true);
+
+    newComment.querySelector('h4').textContent = comment.username;
+    newComment.querySelector('span').textContent = comment.date;
+    newComment.querySelector('p').textContent = comment.comment;
+
+    container.appendChild(newComment);
+  }
+}
+
+// Get comments when body is loaded
+document.body.onload = () => {
+  // Listen to changes in the quantity of comments to display
+  document.getElementById("quantity").onchange = (event) => {
+    GET_PARAMS.set('quantity', event.currentTarget.value);
+    getComments();
+  };
+
+  // Listen to changes in the order to display comments
+  document.getElementById("dateOrder").onchange = (event) => {
+    GET_PARAMS.set('dateOrder', event.currentTarget.checked);
+    getComments();
+  };
+
+  getComments();
+}
