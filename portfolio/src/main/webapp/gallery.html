@@ -17,36 +17,10 @@
             Nevertheless, if you are interested in more content (of my dogs)
             you can see a bit more in <a href="https://www.instagram.com/_angelgh_" target="_blank">my Instagram</a>. 📷
           </p>
-          <div class="image-thumbnails">
-            <img src="/images/FifiAndPanda.jpg"
-                alt="Fifi and Panda. In front, in the lower left corner a toy
-                panda waving his hand. In the back, a sleeping white and cream chihuaha.">
-            <img src="/images/HappyFifi.jpg"
-                alt="Happy Fifi. In the center, a white and cream chihuahua
-                being petted on the head.">
-            <img src="/images/FifiLooksAtPanda.jpg"
-                alt="Fifi looking at Panda. In front, in the lower left corner
-                a toy panda. In the back, a white and cream chihuaha looking at
-                the toy panda.">
-            <img src="/images/GuayabaGrabbed.jpg"
-                alt="Between the leaves, a guava is visible, hanging from the branch,
-                grabbed by a hand. Ready to be harvested.">
-            <img src="/images/DogsHouse.jpg"
-                alt="A dog house, two dogs inside it. A sleeping brown and white beagle
-                and a white and cream chihuaha looking to the camera. Outside, a sunny
-                day and flower pots.">
-            <img src="/images/GuayabasTree.jpg"
-                alt="A close look to a guava tree. A bunch of branches and green leaves.
-                Two guavas are hanging from it">
-            <img src="/images/ProfileLaika.jpg"
-                alt="Laika. A close look from bottom to top of a brown and white beagle
-                head inside a living room.">
-            <img src="/images/BeautifulLaika.jpg"
-                alt="Laika. A close look from a side of a brown and white beagle head
-                with his mouth open and tongue out.">
-            <img src="/images/PandaHugsLaika.jpg"
-                alt="Panda hugging Laika. A toy panda hugging a brown and white beagle
-                lying in the floor. The toy panda is small, it is hugging the ear of the dog.">
+          <div id="gallery-container" class="image-thumbnails"></div>
+          <div id="expanded-image-container">
+            <img id="expanded-image">
+            <div id="comments-container"></div>
           </div>
           <form action="/comments" method="POST">
             <label for="username">Name (empty field will be anonymous):</label>
@@ -66,7 +40,6 @@
             <label for="dateOrder">Order by Date: </label>
             <input type="checkbox" id="dateOrder" name="dateOrder" checked>
           </form>
-          <div id="comments-container"></div>
           <template id="comment-card">
             <div class="card">
               <h4 class="card-title"></h4>
@@ -80,6 +53,7 @@
     </div>
     <div id="footer" include-html="footer.html"></div>
     <script src="reusehtml.js"></script>
+    <script src="gallery.js"></script>
     <script src="comments.js"></script>
   </body>
 </html>
