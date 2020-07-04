@@ -71,6 +71,14 @@
   width: 100%;
 }
 
+#comments-container {
+  display: block;
+  margin: 5px;
+  max-height: 300px;
+  overflow: scroll;
+  width: 80%;
+}
+
 #content {
   float: left;
   margin: auto;
