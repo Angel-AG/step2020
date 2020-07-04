@@ -34,9 +34,41 @@
   cursor: pointer;
   display: block;
   font-size: 1.25em;
-  margin: 5px;
+  margin: 2px;
   padding: 5px;
   width: 80%;
+}
+
+.form-container {
+  border: 1px solid lightgrey;
+  border-radius: 10px;
+  display: flex;
+  margin: 5px;
+  padding: 10px;
+  width: 80%;
+}
+
+.form-container input[type=submit] {
+  width: 100%;
+}
+
+.form-container input[type=text] {
+  margin: 2px;
+  padding: 2px 5px;
+  width: 100%;
+}
+
+.form-container label {
+  margin: 2px;
+  padding: 2px 5px;
+}
+
+.form-container textarea {
+  height: 50px;
+  margin: 2px;
+  padding: 2px 5px;
+  resize: none;
+  width: 100%;
 }
 
 #content {
@@ -49,10 +81,11 @@
 #delete-comments {
   background-color: white;
   border: 2px solid #f44336;
-  border-radius: 12px;
+  border-radius: 5px;
   color: black;
-  padding: 14px 30px;
+  padding: 5px 10px;
   transition-duration: 0.4s;
+  width: 80%;
 }
 
 #delete-comments:hover {
