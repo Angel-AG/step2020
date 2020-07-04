@@ -20,28 +20,28 @@
           <div id="gallery-container" class="image-thumbnails"></div>
           <div id="expanded-image-container">
             <img id="expanded-image">
+            <button aria-label="Go back to gallery" class="close-button" onclick="closeImg()">Back to gallery</button>
+            <form action="/comments" method="POST">
+              <label for="username">Name (empty field will be anonymous):</label>
+              <input type="text" id="username" name="username" placeholder="Add a name to your comment here!">
+              <label for="comment">Leave your comment:</label>
+              <textarea id="comment" name="comment" placeholder="Write (nice) comments! ;)"></textarea>
+              <input type="submit">
+            </form>
+            <form action="/comments" method="GET">
+              <label for="quantity">How many comments?</label>
+              <select id="quantity" name="quantity">
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="15">15</option>
+                <option value="20">20</option>
+              </select>
+              <label for="dateOrder">Order by Date: </label>
+              <input type="checkbox" id="dateOrder" name="dateOrder" checked>
+            </form>
+            <button id="delete-comments" type="button">Delete all comments</button>
             <div id="comments-container"></div>
           </div>
-          <form action="/comments" method="POST">
-            <label for="username">Name (empty field will be anonymous):</label>
-            <input type="text" id="username" name="username" placeholder="Add a name to your comment here!">
-            <label for="comment">Leave your comment:</label>
-            <textarea id="comment" name="comment" placeholder="Write (nice) comments! ;)"></textarea>
-            <input type="submit">
-          </form>
-          <form action="/comments" method="GET">
-            <label for="quantity">How many comments?</label>
-            <select id="quantity" name="quantity">
-              <option value="5">5</option>
-              <option value="10">10</option>
-              <option value="15">15</option>
-              <option value="20">20</option>
-            </select>
-            <label for="dateOrder">Order by Date: </label>
-            <input type="checkbox" id="dateOrder" name="dateOrder" checked>
-          </form>
-          <button id="delete-comments" type="button">Delete all comments</button>
-          <div id="comments-container"></div>
           <template id="comment-card">
             <div class="card">
               <h4 class="card-title"></h4>

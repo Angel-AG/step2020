@@ -67,6 +67,9 @@ const GALLERY_PICS = [
   }
 ];
 
+/**
+ * Create the img elements and add them to gallery
+ */
 function addImagesToGallery() {
   const imgContainer = document.getElementById('gallery-container');
 
@@ -78,11 +81,34 @@ function addImagesToGallery() {
     newImg.setAttribute('alt', pic.alt);
     newImg.setAttribute('role','button');
     newImg.addEventListener('click', (event) => {
-      getComments(event.target.id); // comments.js
+      expandImg(event.target);
     });
 
     imgContainer.appendChild(newImg);
   }
+}
+
+/**
+ * Expand the clicked image and show comments section
+ * @param {Object} image The img element of the clicked image
+ */
+function expandImg(image) {
+  // Hide gallery and show expanded image
+  document.getElementById('gallery-container').style.display = 'none';
+  document.getElementById('expanded-image-container').style.display = 'flex';
+
+  const expandedImg = document.getElementById('expanded-image');
+
+  expandedImg.src = image.src;
+  expandedImg.alt = image.alt;
+}
+
+/**
+ * Hide the expanded image and show the gallery
+ */
+function closeImg() {
+  document.getElementById('gallery-container').style.display = 'flex';
+  document.getElementById('expanded-image-container').style.display = 'none';
 }
 
 // Add images to gallery when body is loaded
