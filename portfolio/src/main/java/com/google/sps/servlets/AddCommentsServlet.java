@@ -37,23 +37,22 @@ public class AddCommentsServlet extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    handlePostParams();
+    handlePostParams(request);
     date = new Date();
 
     // Send an error message
     if (imageId.isEmpty() || comment.isEmpty()) {
-      response.sendError(400,
+      response.sendError(HttpServletResponse.SC_BAD_REQUEST,
           "Sorry, we can't process your request. Check the required fields are filled.");
       return;
     }
 
-    Entity comment = createCommentEntity();
+    Entity commentEntity = createCommentEntity();
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    datastore.put(comment);
+    datastore.put(commentEntity);
 
-    response.setStatus(HttpServletResponse.SC_OK);
-    response.getWriter().println();
+    response.sendRedirect("gallery.html?imageId=" + imageId);
   }
 
   /**
@@ -81,12 +80,12 @@ public class AddCommentsServlet extends HttpServlet {
    * Return a comment entity
    */
   private Entity createCommentEntity() {
-    Entity comment = new Entity("Comment");
+    Entity commentEntity = new Entity("Comment");
     commentEntity.setProperty("username", username);
     commentEntity.setProperty("comment", comment);
     commentEntity.setProperty("imageId", imageId);
     commentEntity.setProperty("date", date);
     
-    return comment;
+    return commentEntity;
   }
 }

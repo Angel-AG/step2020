@@ -22,7 +22,6 @@ import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.Filter;
 import com.google.appengine.api.datastore.Query.FilterOperator;
-import com.google.appengine.api.datastore.Query.FilterPredicate;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.gson.Gson;
 import com.google.sps.data.Comment;
@@ -56,7 +55,8 @@ public class ListCommentsServlet extends HttpServlet {
 
     // A pic id is needed to continue
     if (commentPicId.isEmpty()) {
-      response.sendRedirect("/gallery.html");
+      response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+      return;
     }
 
     Query fetchComments = buildQuery();
@@ -122,8 +122,7 @@ public class ListCommentsServlet extends HttpServlet {
     }
 
     // Filter comments by pic id
-    Filter picIdFilter = new FilterPredicate("imageId", FilterOperator.EQUAL, commentPicId);
-    query.addFilter(picIdFilter);
+    query.addFilter("imageId", FilterOperator.EQUAL, commentPicId);
 
     return query;
   }

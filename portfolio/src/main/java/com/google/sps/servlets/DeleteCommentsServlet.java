@@ -23,7 +23,6 @@ import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.Filter;
 import com.google.appengine.api.datastore.Query.FilterOperator;
-import com.google.appengine.api.datastore.Query.FilterPredicate;
 import com.google.gson.Gson;
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
@@ -41,14 +40,14 @@ public class DeleteCommentsServlet extends HttpServlet {
     
     // Send an error message
     if (imageId.isEmpty()) {
-      response.sendError(400,
+      response.sendError(HttpServletResponse.SC_BAD_REQUEST,
           "Something went wrong, we couldn't process your request. Reload the page and try again");
       return;
     }
     
     // Filter comments by image id
-    Filter picIdFilter = new FilterPredicate("imageId", FilterOperator.EQUAL, commentPicId);
-    Query fetchComments = new Query("Comment").addFilter(picIdFilter);
+    Query fetchComments = new Query("Comment");
+    fetchComments.addFilter("imageId", FilterOperator.EQUAL, imageId);
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery commentsRetrieved = datastore.prepare(fetchComments);
@@ -56,9 +55,6 @@ public class DeleteCommentsServlet extends HttpServlet {
     for (Entity commentEntity : commentsRetrieved.asIterable()) {
       datastore.delete(commentEntity.getKey());
     }
-
-    response.setStatus(HttpServletResponse.SC_OK);
-    response.getWriter().println();
   }
 
   /**
