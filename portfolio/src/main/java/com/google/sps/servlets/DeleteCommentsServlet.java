@@ -21,6 +21,9 @@ import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.Filter;
+import com.google.appengine.api.datastore.Query.FilterOperator;
+import com.google.appengine.api.datastore.Query.FilterPredicate;
 import com.google.gson.Gson;
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
@@ -34,7 +37,18 @@ public class DeleteCommentsServlet extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    Query fetchComments = new Query("Comment");
+    String imageId = getParameter(request, "imageId", "");
+    
+    // Send an error message
+    if (imageId.isEmpty()) {
+      response.sendError(400,
+          "Something went wrong, we couldn't process your request. Reload the page and try again");
+      return;
+    }
+    
+    // Filter comments by image id
+    Filter picIdFilter = new FilterPredicate("imageId", FilterOperator.EQUAL, commentPicId);
+    Query fetchComments = new Query("Comment").addFilter(picIdFilter);
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery commentsRetrieved = datastore.prepare(fetchComments);
@@ -42,5 +56,20 @@ public class DeleteCommentsServlet extends HttpServlet {
     for (Entity commentEntity : commentsRetrieved.asIterable()) {
       datastore.delete(commentEntity.getKey());
     }
+
+    response.setStatus(HttpServletResponse.SC_OK);
+    response.getWriter().println();
+  }
+
+  /**
+   * Return the request parameter or the default value if the parameter
+   * was not specified by the client
+   */
+  private String getParameter(HttpServletRequest request, String name, String defaultValue) {
+    String value = request.getParameter(name);
+    if (value == null || value.isEmpty()) {
+      return defaultValue;
+    }
+    return value;
   }
 }
