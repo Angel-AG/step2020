@@ -22,7 +22,8 @@
             <img id="expanded-image">
             <button aria-label="Go back to gallery" class="close-button" onclick="closeImg()">Back to gallery</button>
             <div class="form-container">
-              <form action="/comments" method="POST">
+              <form action="/add-comments" method="POST">
+                <input type="hidden" name="imageId" value="">
                 <label for="username">Name (empty field will be anonymous):</label>
                 <input type="text" id="username" name="username" placeholder="Add a name to your comment here!">
                 <label for="comment">Leave your comment:</label>
@@ -31,7 +32,8 @@
               </form>
             </div>
             <div class="form-container">
-              <form action="/comments" method="GET">
+              <form action="/list-comments" method="GET">
+                <input type="hidden" name="imageId" value="">
                 <label for="quantity">How many comments?</label>
                 <select id="quantity" name="quantity">
                   <option value="5">5</option>
@@ -44,7 +46,7 @@
               </form>
             </div>
             <div id="comments-container"></div>
-            <button id="delete-comments" type="button">Delete all comments</button>
+            <button id="delete-comments" type="button" value="">Delete all comments</button>
           </div>
           <template id="comment-card">
             <div class="card">
