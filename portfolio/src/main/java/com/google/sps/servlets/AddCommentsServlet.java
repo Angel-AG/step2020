@@ -52,7 +52,7 @@ public class AddCommentsServlet extends HttpServlet {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     datastore.put(commentEntity);
 
-    response.sendRedirect("gallery.html?imageId=" + imageId);
+    response.sendRedirect("gallery.html?imageId=" + imageId + "#comments-container");
   }
 
   /**
