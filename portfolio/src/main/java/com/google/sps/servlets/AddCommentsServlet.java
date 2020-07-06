@@ -42,8 +42,7 @@ public class AddCommentsServlet extends HttpServlet {
 
     // Send an error message
     if (imageId.isEmpty() || comment.isEmpty()) {
-      response.sendError(HttpServletResponse.SC_BAD_REQUEST,
-          "Sorry, we can't process your request. Check the required fields are filled.");
+      response.sendError(HttpServletResponse.SC_BAD_REQUEST);
       return;
     }
 

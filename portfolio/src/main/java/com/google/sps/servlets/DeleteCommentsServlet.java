@@ -40,8 +40,7 @@ public class DeleteCommentsServlet extends HttpServlet {
     
     // Send an error message
     if (imageId.isEmpty()) {
-      response.sendError(HttpServletResponse.SC_BAD_REQUEST,
-          "Something went wrong, we couldn't process your request. Reload the page and try again");
+      response.sendError(HttpServletResponse.SC_BAD_REQUEST);
       return;
     }
     
