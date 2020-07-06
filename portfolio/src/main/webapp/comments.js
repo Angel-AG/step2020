@@ -17,6 +17,7 @@
  * @const {URLSearchParams}
  */
 const GET_PARAMS = new URLSearchParams ({
+  imageId: '',
   quantity: '5',
   dateOrder: 'true'
 });
@@ -24,21 +25,37 @@ const GET_PARAMS = new URLSearchParams ({
 /**
  * Delete all the comments
  */
-function deleteAllComments() {
-  fetch('delete-comments', {method: 'POST'}).then(getComments);
+function deleteAllComments(imageId) {
+  const postParams = new URLSearchParams();
+  postParams.append('imageId', imageId);
+
+  fetch('/delete-comments', {method: 'POST', body: postParams}).then(response => {
+    if (response.status === 200) {
+      getComments();
+    } else {
+      alert('Sorry, we could not process your request. ' +
+          'Reload the page and try again.');
+    }
+  });
 }
 
 /**
- * Fetches comments from the server and adds it to the DOM.
+ * Fetches comments from the server and adds them to the DOM.
  */
 function getComments() {
-  const url = '/comments?' + GET_PARAMS.toString();
-
-  fetch(url).then(response => response.json()).then((comments) => {
-    const commentsContainer = document.querySelector('#comments-container');
-    
-    removeNodeChildren(commentsContainer);
-    addCommentsToDom(comments, commentsContainer);
+  fetch(`/list-comments?${GET_PARAMS.toString()}`).then((response) => {
+    if (response.status === 200) {
+      response.json().then((comments) => {
+        const commentsContainer = document.querySelector('#comments-container');
+        
+        removeNodeChildren(commentsContainer);
+        addCommentsToDom(comments, commentsContainer);
+      });
+    }
+    else {
+      alert('Sorry, we could not process your request. ' +
+          'Reload the page and try again.');
+    }
   });
 }
 
@@ -71,29 +88,45 @@ function addCommentsToDom(comments, container) {
   }
 }
 
+/**
+ * Set up functions for when comment section events are triggered
+ */
 function setUpComments() {
   // Listen to changes in the quantity of comments to display
-  document.getElementById("quantity").onchange = (event) => {
-    GET_PARAMS.set('quantity', event.currentTarget.value);
+  document.getElementById('quantity').addEventListener('change', (event) => {
+    GET_PARAMS.set('quantity', event.target.value);
     getComments();
-  };
+  });
 
   // Listen to changes in the order to display comments
-  document.getElementById("dateOrder").onchange = (event) => {
-    GET_PARAMS.set('dateOrder', event.currentTarget.checked);
+  document.getElementById('dateOrder').addEventListener('change', (event) => {
+    GET_PARAMS.set('dateOrder', event.target.checked);
     getComments();
-  };
+  });
 
-  document.getElementById('delete-comments').onclick = deleteAllComments;
-
-  getComments();
+  // Listen to when the delete buttons is clicked
+  document.getElementById('delete-comments').addEventListener('click', (event) => {
+    deleteAllComments(event.target.value);
+  });
 }
 
 // Set up comments when DOM is loaded
 if (document.readyState === 'loading') {
   // loading yet, wait for the event
-  document.addEventListener('DOMContentLoaded', setUpComments);
+  document.addEventListener('DOMContentLoaded', () => {
+    setUpComments();
+    // Function in gallery.js
+    hasQueryString('imageId', () => {
+      GET_PARAMS.set('imageId', QUERY_STRING.get('imageId'))
+      getComments();
+    });
+  });
 } else {
   // DOM is ready!
   setUpComments();
+  // Function in gallery.js
+  hasQueryString('imageId', () => {
+    GET_PARAMS.set('imageId', QUERY_STRING.get('imageId'));
+    getComments();
+  });
 }

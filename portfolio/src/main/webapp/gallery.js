@@ -12,9 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+/** @const {URLSearchParams} QUERY_STRING Keep track of the querystring*/
+const QUERY_STRING = new URLSearchParams(window.location.search);
+
+/**
+ * Check if the querystring has a paramater,
+ * if true, then execute the function provided
+ * @param {string} param The parameter to check for in the query string
+ * @param {function} doFunc The function to execute if the parameter exists
+ */
+function hasQueryString(param, doFunc) {
+  if (QUERY_STRING.has(param)) {
+    doFunc();
+  }
+}
+
 /**
  * An array of pics' id and alternative text
- * @const {!Array<{id: string, alt: string}>}
+ * @const {!Array<{id: string, alt: string}>} GALLERY_PICS
  */
 const GALLERY_PICS = [
   {
@@ -81,7 +96,8 @@ function addImagesToGallery() {
     newImg.setAttribute('alt', pic.alt);
     newImg.setAttribute('role','button');
     newImg.addEventListener('click', (event) => {
-      expandImg(event.target);
+      window.location.hash = 'expanded-image-container';
+      window.location.search = `imageId=${pic.id}`;
     });
 
     imgContainer.appendChild(newImg);
@@ -97,25 +113,39 @@ function expandImg(image) {
   document.getElementById('gallery-container').style.display = 'none';
   document.getElementById('expanded-image-container').style.display = 'flex';
 
+  // Add attributes to expanded image
   const expandedImg = document.getElementById('expanded-image');
 
   expandedImg.src = image.src;
   expandedImg.alt = image.alt;
+
+  // Specify element id to which apply GET and POST requests
+  document.getElementById('delete-comments').value = image.id;  
+  document.querySelectorAll('input[type=hidden]').forEach((input) => {
+    input.value = image.id;
+  });
 }
 
 /**
  * Hide the expanded image and show the gallery
  */
 function closeImg() {
-  document.getElementById('gallery-container').style.display = 'flex';
-  document.getElementById('expanded-image-container').style.display = 'none';
+  window.location = `${window.location.pathname}#gallery-container`;
 }
 
 // Add images to gallery when body is loaded
 if (document.readyState === 'loading') {
   // loading yet, wait for the event
-  document.addEventListener('DOMContentLoaded', addImagesToGallery);
+  document.addEventListener('DOMContentLoaded', () => {
+    addImagesToGallery();
+    hasQueryString('imageId', () => {
+      expandImg(document.getElementById(QUERY_STRING.get('imageId')));
+    });
+  });
 } else {
   // DOM is ready!
   addImagesToGallery();
+  hasQueryString('imageId', () => {
+    expandImg(document.getElementById(QUERY_STRING.get('imageId')));
+  });
 }
