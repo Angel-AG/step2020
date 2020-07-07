@@ -106,7 +106,7 @@ function addImagesToGallery() {
 
 /**
  * Expand the clicked image and show comments section
- * @param {Object} image The img element of the clicked image
+ * @param {Element} image The img element of the clicked image
  */
 function expandImg(image) {
   // Hide gallery and show expanded image
