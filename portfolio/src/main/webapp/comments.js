@@ -91,7 +91,7 @@ function addCommentsToDom(comments, container) {
 /**
  * Set up functions for when comment section events are triggered
  */
-function setUpComments() {
+function init() {
   // Listen to changes in the quantity of comments to display
   document.getElementById('quantity').addEventListener('change', (event) => {
     GET_PARAMS.set('quantity', event.target.value);
@@ -111,22 +111,11 @@ function setUpComments() {
 }
 
 // Set up comments when DOM is loaded
-if (document.readyState === 'loading') {
-  // loading yet, wait for the event
-  document.addEventListener('DOMContentLoaded', () => {
-    setUpComments();
-    // Function in gallery.js
-    hasQueryString('imageId', () => {
-      GET_PARAMS.set('imageId', QUERY_STRING.get('imageId'))
-      getComments();
-    });
-  });
-} else {
-  // DOM is ready!
-  setUpComments();
+document.addEventListener('DOMContentLoaded', () => {
+  init();
   // Function in gallery.js
   hasQueryString('imageId', () => {
     GET_PARAMS.set('imageId', QUERY_STRING.get('imageId'));
     getComments();
   });
-}
+});

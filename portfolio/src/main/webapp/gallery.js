@@ -134,18 +134,10 @@ function closeImg() {
 }
 
 // Add images to gallery when body is loaded
-if (document.readyState === 'loading') {
-  // loading yet, wait for the event
-  document.addEventListener('DOMContentLoaded', () => {
-    addImagesToGallery();
-    hasQueryString('imageId', () => {
-      expandImg(document.getElementById(QUERY_STRING.get('imageId')));
-    });
-  });
-} else {
+document.addEventListener('DOMContentLoaded', () => {
   // DOM is ready!
   addImagesToGallery();
   hasQueryString('imageId', () => {
     expandImg(document.getElementById(QUERY_STRING.get('imageId')));
   });
-}
+});
