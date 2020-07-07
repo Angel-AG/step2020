@@ -25,6 +25,7 @@ import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.gson.Gson;
 import com.google.sps.data.Comment;
+import com.google.sps.data.HttpServletUtils;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -35,23 +36,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /** Servlet that returns a list of comments */
-@WebServlet("/list-comments")
+@WebServlet("/get-comments")
 public class ListCommentsServlet extends HttpServlet {
-
-  // GET parameters
-  private String commentPicId;
-  private int fetchQuantity;
-  private boolean isOrderByDate;
-
-  @Override
-  public void init() {
-    fetchQuantity = 5;
-    isOrderByDate = true;
-  }
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    handleGetParams(request);
+    // Handle GET parameters
+    String commentPicId = HttpServletUtils.getParameter(request, "imageId", "");
+    int fetchQuantity = Integer.parseInt(HttpServletUtils.getParameter(request, "quantity", "5"));
+    boolean isDateDescending = Boolean.parseBoolean(
+        HttpServletUtils.getParameter(request, "dateDescending", "false"));
 
     // A pic id is needed to continue
     if (commentPicId.isEmpty()) {
@@ -59,7 +53,7 @@ public class ListCommentsServlet extends HttpServlet {
       return;
     }
 
-    Query fetchComments = buildQuery();
+    Query fetchComments = buildQuery(commentPicId, isDateDescending);
 
     Iterable<Entity> commentsRetrieved = retrieveComments(fetchComments, fetchQuantity);
 
@@ -70,56 +64,13 @@ public class ListCommentsServlet extends HttpServlet {
   }
 
   /**
-   * Return the request parameter or the default value if the parameter
-   * was not specified by the client
-   */
-  private String getParameter(HttpServletRequest request, String name, String defaultValue) {
-    String value = request.getParameter(name);
-    if (value == null || value.isEmpty()) {
-      return defaultValue;
-    }
-    return value;
-  }
-
-  /**
-   * Get and assign parameters of a request
-   */
-  private void handleGetParams(HttpServletRequest request) {
-    String imageId = getParameter(request, "imageId", "");
-    if (imageId.isEmpty()) {
-      commentPicId = "";
-      return; // Return here since getting other parameters will be worthless
-    } else {
-      commentPicId = imageId;
-    }
-
-    String quantity = getParameter(request, "quantity", "");
-    if (quantity.isEmpty()) {
-      fetchQuantity = 5;
-    } else {
-      fetchQuantity = Integer.parseInt(quantity);
-    }
-
-    String dateOrder = getParameter(request, "dateOrder", "");
-    if (dateOrder.isEmpty()) {
-      isOrderByDate = false;
-    } else {
-      isOrderByDate = Boolean.parseBoolean(dateOrder);
-    }
-  }
-
-  /**
    * Construct a query according to the parameters' values
    */
-  private Query buildQuery() {
+  private Query buildQuery(String commentPicId, boolean isDateDescending) {
     Query query = new Query("Comment");
     
     // Sort by date
-    if (isOrderByDate) {
-      query.addSort("date", SortDirection.DESCENDING);
-    } else {
-      query.addSort("date", SortDirection.ASCENDING);
-    }
+    query.addSort("date", isDateDescending ? SortDirection.DESCENDING : SortDirection.ASCENDING);
 
     // Filter comments by pic id
     query.addFilter("imageId", FilterOperator.EQUAL, commentPicId);
