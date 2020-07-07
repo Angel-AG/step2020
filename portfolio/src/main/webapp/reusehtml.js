@@ -22,7 +22,7 @@
  * - 3 LOADING
  * - 4 DONE
  * @param {Object} xmlHttp XMLHttpRequest to monitor the progress
- * @param {Object} element HTML element to alter its inner content
+ * @param {Element} element HTML element to alter its inner content
  */
 function alterHtml(xmlHttp, element) {
   if (xmlHttp.readyState < 4) {
@@ -45,7 +45,7 @@ function alterHtml(xmlHttp, element) {
 
 /**
  * Make an HTTP Request for the HTML file.
- * @param {Object} htmlElement HTML element to alter its content
+ * @param {Element} htmlElement HTML element to alter its content
  * @param {string} htmlPath Path to the HTML file
  * @param {function} timeoutFunc Function to fire when timeout is reached
  */
@@ -87,9 +87,7 @@ function includeHtml() {
   }
 }
 
-/**
- * Listens to when the HTML document has been completely loaded and parsed
- */
+// Include reuse HTML content when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
   includeHtml();
 });
