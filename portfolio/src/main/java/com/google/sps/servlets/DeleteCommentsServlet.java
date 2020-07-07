@@ -24,6 +24,7 @@ import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.Filter;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.gson.Gson;
+import com.google.sps.data.HttpServletUtils;
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -36,7 +37,7 @@ public class DeleteCommentsServlet extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String imageId = getParameter(request, "imageId", "");
+    String imageId = HttpServletUtils.getParameter(request, "imageId", "");
     
     // Send an error message
     if (imageId.isEmpty()) {
@@ -54,17 +55,5 @@ public class DeleteCommentsServlet extends HttpServlet {
     for (Entity commentEntity : commentsRetrieved.asIterable()) {
       datastore.delete(commentEntity.getKey());
     }
-  }
-
-  /**
-   * Return the request parameter or the default value if the parameter
-   * was not specified by the client
-   */
-  private String getParameter(HttpServletRequest request, String name, String defaultValue) {
-    String value = request.getParameter(name);
-    if (value == null || value.isEmpty()) {
-      return defaultValue;
-    }
-    return value;
   }
 }
