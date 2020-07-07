@@ -28,6 +28,11 @@ public final class HttpServletUtils {
    * was not specified by the client
    */
   public static String getParameter(HttpServletRequest request, String name, String defaultValue) {
+    // Null check
+    if (request == null) {
+      return defaultValue;
+    }
+    
     String value = request.getParameter(name);
     if (value == null || value.isEmpty()) {
       return defaultValue;
