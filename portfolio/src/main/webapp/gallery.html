@@ -33,7 +33,7 @@
               </form>
             </div>
             <div class="form-container">
-              <form action="/list-comments" method="GET">
+              <form action="/get-comments" method="GET">
                 <input type="hidden" name="imageId" value="">
                 <label for="quantity">How many comments?</label>
                 <select id="quantity" name="quantity">
@@ -42,8 +42,8 @@
                   <option value="15">15</option>
                   <option value="20">20</option>
                 </select>
-                <label for="dateOrder">Order by Date: </label>
-                <input type="checkbox" id="dateOrder" name="dateOrder" checked>
+                <label for="dateDescending">Order by Descending Date: </label>
+                <input type="checkbox" id="dateDescending" name="dateDescending" checked>
               </form>
             </div>
             <div id="comments-container"></div>

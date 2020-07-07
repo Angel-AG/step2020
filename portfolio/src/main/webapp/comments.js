@@ -19,7 +19,7 @@
 const GET_PARAMS = new URLSearchParams ({
   imageId: '',
   quantity: '5',
-  dateOrder: 'true'
+  dateDescending: 'true'
 });
 
 /**
@@ -43,12 +43,12 @@ function deleteAllComments(imageId) {
  * Fetches comments from the server and adds them to the DOM.
  */
 function getComments() {
-  fetch(`/list-comments?${GET_PARAMS.toString()}`).then((response) => {
+  fetch(`/get-comments?${GET_PARAMS.toString()}`).then((response) => {
     if (response.status === 200) {
       response.json().then((comments) => {
         const commentsContainer = document.querySelector('#comments-container');
         
-        removeNodeChildren(commentsContainer);
+        removeCommentsFromDom(commentsContainer);
         addCommentsToDom(comments, commentsContainer);
       });
     }
@@ -61,9 +61,9 @@ function getComments() {
 
 /**
  * Remove children of a HTML node
- * @param {Object} node The HTML node, element.
+ * @param {Element} node The HTML node, element.
  */
-function removeNodeChildren(node) {
+function removeCommentsFromDom(node) {
   while (node.firstChild) {
     node.removeChild(node.lastChild);
   }
@@ -72,7 +72,7 @@ function removeNodeChildren(node) {
 /**
  * Adds comments to a container using a template
  * @param {!Array<{Object}>} comments The comments to add
- * @param {Object} container The container to place comments inside
+ * @param {Element} container The container to place comments inside
  */
 function addCommentsToDom(comments, container) {
   const commentTemplate = document.querySelector('#comment-card');
@@ -99,8 +99,8 @@ function setUpComments() {
   });
 
   // Listen to changes in the order to display comments
-  document.getElementById('dateOrder').addEventListener('change', (event) => {
-    GET_PARAMS.set('dateOrder', event.target.checked);
+  document.getElementById('dateDescending').addEventListener('change', (event) => {
+    GET_PARAMS.set('dateDescending', event.target.checked);
     getComments();
   });
 
