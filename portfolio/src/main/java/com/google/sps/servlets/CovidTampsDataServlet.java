@@ -29,25 +29,37 @@ public class CovidTampsDataServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    LinkedHashMap<Character, Integer> confirmedCovidBySex = new LinkedHashMap<>();
+    LinkedHashMap<String, LinkedHashMap<String, Integer>> covidData = 
+        new LinkedHashMap<String, LinkedHashMap<String, Integer>>();
     
-    Scanner scanner = new Scanner(getServletContext().getResourceAsStream(
-        "/WEB-INF/confirmedCovidTampsBySex.csv"));
+    covidData.put("covidBySex", getDataFromCsv("/WEB-INF/confirmedCovidTampsBySex.csv"));
+    covidData.put("covidByMunicipality", getDataFromCsv("/WEB-INF/confirmedCovidTampsByMunicipality.csv"));
+
+    response.setContentType("application/json");
+    Gson gson = new Gson();
+    String json = gson.toJson(covidData);
+    response.getWriter().println(json);
+  }
+
+  /**
+   *
+   */
+  private LinkedHashMap<String, Integer> getDataFromCsv(String path) {
+    LinkedHashMap<String, Integer> data = new LinkedHashMap<String, Integer>();
+    
+    Scanner scanner = new Scanner(getServletContext().getResourceAsStream(path));
     while (scanner.hasNextLine()) {
       String line = scanner.nextLine();
       String[] cells = line.split(",");
 
-      char sex = cells[0].charAt(0);
-      Integer cases = Integer.parseInt(cells[1]);
+      String attribute = cells[0];
+      Integer value = Integer.parseInt(cells[1]);
 
-      confirmedCovidBySex.put(sex, cases);
+      data.put(attribute, value);
     }
     scanner.close();
 
-    response.setContentType("application/json");
-    Gson gson = new Gson();
-    String json = gson.toJson(confirmedCovidBySex);
-    response.getWriter().println(json);
+    return data;
   }
 
   // /**
