@@ -39,8 +39,8 @@ function createChartBySex(covidData) {
     legend: {alignment: 'center', position: 'bottom'},
     title: 'Covid-19 Cases: Women and Men',
     pieHole: 0.4,
-    width:600,
-    height:500
+    width: 600,
+    height: 500
   };
 
   const chart = new google.visualization.PieChart(
