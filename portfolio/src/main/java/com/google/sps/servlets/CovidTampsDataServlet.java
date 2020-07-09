@@ -34,6 +34,7 @@ public class CovidTampsDataServlet extends HttpServlet {
     
     covidData.put("covidBySex", getDataFromCsv("/WEB-INF/confirmedCovidTampsBySex.csv"));
     covidData.put("covidByMunicipality", getDataFromCsv("/WEB-INF/confirmedCovidTampsByMunicipality.csv"));
+    covidData.put("covidByAgeRange", getDataFromCsv("/WEB-INF/confirmedCovidTampsByAgeRange.csv"));
 
     response.setContentType("application/json");
     Gson gson = new Gson();

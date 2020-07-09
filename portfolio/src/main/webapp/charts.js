@@ -22,6 +22,7 @@ function drawCharts() {
     console.log(covidData);
     createChartBySex(covidData["covidBySex"]);
     createChartByMunicipality(covidData["covidByMunicipality"]);
+    createChartByAgeRange(covidData["covidByAgeRange"]);
   });
 }
 
@@ -68,8 +69,7 @@ function createChartByMunicipality(covidData) {
     },
     bars: 'horizontal',
     chart: {
-      title: 'Cumulative Confirmed Covid-19 Cases (Municipality)',
-      subtitle: 'Updated: 07-07-2020'
+      title: 'Cumulative Confirmed Covid-19 Cases (Municipality)'
     },
     colors: ['red'],
     hAxis: {
@@ -84,4 +84,39 @@ function createChartByMunicipality(covidData) {
   const chart = new google.charts.Bar(
     document.getElementById('covidByMunicipality-container'));
   chart.draw(data, google.charts.Bar.convertOptions(options));
+}
+
+function createChartByAgeRange(covidData) {
+  const data = new google.visualization.DataTable();
+  data.addColumn('string', '');
+  data.addColumn('number', 'Covid-19 Cases');
+
+  Object.keys(covidData).forEach((idEntry) => {
+    data.addRow([idEntry, covidData[idEntry]]);
+  });
+
+  const options = {
+    colors: ['red'],
+    dataOpacity: .9,
+    hAxis: {
+      slantedText: true,
+      slantedTextAngle: 60,
+      showTextEvery: 1,
+      viewWindowMode: 'maximized'
+    },
+    histogram: { bucketSize: 5},
+    height: 550,
+    legend: { position: 'none'},
+    title: 'Cumulative Confirmed Covid-19 Cases (Age Range)',
+    vAxis: {
+      baselineColor: '#fff',
+      format: 'decimal',
+      viewWindowMode: 'maximized'
+    },
+    width: 950
+  };
+
+  const chart = new google.visualization.Histogram(
+      document.getElementById('covidByAgeRange-container'));
+  chart.draw(data, options);
 }
