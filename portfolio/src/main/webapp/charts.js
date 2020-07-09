@@ -15,24 +15,32 @@
 google.charts.load('current', {'packages':['corechart']});
 google.charts.setOnLoadCallback(drawChart);
 
-/** Creates a chart and adds it to the page. */
+/** Fetches covid data and uses it to create a chart. */
 function drawChart() {
-  const data = new google.visualization.DataTable();
-  data.addColumn('string', 'Animal');
-  data.addColumn('number', 'Count');
-        data.addRows([
-          ['Lions', 10],
-          ['Tigers', 5],
-          ['Bears', 15]
-        ]);
+  fetch('/get-covidTampsData').then(response => response.json())
+  .then((covidData) => {
+    const data = new google.visualization.DataTable();
+    data.addColumn('string', 'Sex');
+    data.addColumn('number', 'Covid-19 Cases');
 
-  const options = {
-    'title': 'Zoo Animals',
-    'width':500,
-    'height':400
-  };
+    data.addRows([
+      ["Women", covidData['M']],
+      ["Men", covidData['H']]
+    ]);
 
-  const chart = new google.visualization.PieChart(
-      document.getElementById('chart-container'));
-  chart.draw(data, options);
+    const options = {
+      'legend': {
+        alignment: 'center',
+        position: 'bottom',
+        },
+      'title': 'Cumulative Confirmed Covid-19 Cases',
+      'pieHole': 0.4,
+      'width':600,
+      'height':500
+    };
+
+    const chart = new google.visualization.PieChart(
+        document.getElementById('covidBySex-container'));
+    chart.draw(data, options);
+  });
 }

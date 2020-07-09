@@ -5,6 +5,8 @@
     <title>My Portfolio</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="charts.js"></script>
+    <script src="reusehtml.js"></script>
   </head>
   <body>
     <div id="header" include-html="header.html"></div>
@@ -12,13 +14,13 @@
       <div id="nav" include-html="navbar.html"></div>
       <div id="content">
         <article>
-          <h2>Charts</h2>
-          <div id="chart-container"></div>
+          <h2>Covid-19 Cases in Tamaulipas, Mexico</h2>
+          <div id="charts-container">
+            <div id="covidBySex-container"></div>
+          </div>
         </article>
       </div>
     </div>
     <div id="footer" include-html="footer.html"></div>
-    <script src="charts.js"></script>
-    <script src="reusehtml.js"></script>
   </body>
 </html>
