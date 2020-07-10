@@ -19,7 +19,6 @@ google.charts.setOnLoadCallback(drawCharts);
 function drawCharts() {
   fetch('/get-covidTampsData').then(response => response.json())
   .then((covidData) => {
-    console.log(covidData);
     createChartBySex(covidData['covidBySex']);
     createChartByMunicipality(covidData['covidByMunicipality']);
     createChartByAgeRange(covidData['covidByAgeRange']);
