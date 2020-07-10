@@ -186,3 +186,35 @@
 #random-image-container {
   margin: 10px;
 }
+
+.tabs-container {
+  background-color: #f1f1f1;
+  border: 1px solid #ccc;
+  overflow: hidden;
+}
+
+.tab-content {
+  border: 1px solid #ccc;
+  border-top: none;
+  height: 1px;
+  overflow: auto;
+  visibility: hidden;
+}
+
+.tab-link {
+  background-color: inherit;
+  border: none;
+  cursor: pointer;
+  float: left;
+  outline: none;
+  padding: 14px 16px;
+  transition: 0.3s;
+}
+
+.tab-link:hover {
+  background-color: #ddd;
+}
+
+.active {
+  background-color: #ccc;
+}

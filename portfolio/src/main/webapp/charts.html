@@ -15,10 +15,15 @@
       <div id="content">
         <article>
           <h2>Covid-19 Cases in Tamaulipas, Mexico (07-07-2020)</h2>
+          <div class="tabs-container">
+            <button value="covidBySex" class="tab-link">By Sex</button>
+            <button value="covidByMunicipality" class="tab-link">By Municipality</button>
+            <button value="covidByAgeRange" class="tab-link">By Age Range</button>
+          </div>
           <div id="charts-container">
-            <div id="covidBySex-container"></div>
-            <div id="covidByMunicipality-container"></div>
-            <div id="covidByAgeRange-container"></div>
+            <div id="covidBySex-container" class="tab-content"></div>
+            <div id="covidByMunicipality-container" class="tab-content"></div>
+            <div id="covidByAgeRange-container" class="tab-content"></div>
           </div>
         </article>
       </div>

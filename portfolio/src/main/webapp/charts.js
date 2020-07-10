@@ -20,28 +20,36 @@ function drawCharts() {
   fetch('/get-covidTampsData').then(response => response.json())
   .then((covidData) => {
     console.log(covidData);
-    createChartBySex(covidData["covidBySex"]);
-    createChartByMunicipality(covidData["covidByMunicipality"]);
-    createChartByAgeRange(covidData["covidByAgeRange"]);
+    createChartBySex(covidData['covidBySex']);
+    createChartByMunicipality(covidData['covidByMunicipality']);
+    createChartByAgeRange(covidData['covidByAgeRange']);
   });
 }
 
+/**
+ * Create a donut chart, showing cases by sex.
+ * @param {Object<string, number>} covidData 
+ */
 function createChartBySex(covidData) {
   const data = new google.visualization.DataTable();
   data.addColumn('string', 'Sex');
   data.addColumn('number', 'Covid-19 Cases');
 
   data.addRows([
-    ["Women", covidData['M']],
-    ["Men", covidData['H']]
+    ['Women', covidData['M']],
+    ['Men', covidData['H']]
   ]);
 
   const options = {
+    chartArea: {
+      height: '80%',
+      width: '80%'
+    },
     legend: {alignment: 'center', position: 'bottom'},
     title: 'Covid-19 Cases: Women and Men',
     pieHole: 0.4,
-    width: 600,
-    height: 500
+    width: 500,
+    height: 400
   };
 
   const chart = new google.visualization.PieChart(
@@ -49,6 +57,12 @@ function createChartBySex(covidData) {
   chart.draw(data, options);
 }
 
+/**
+ * Create a bar chart showing the no. of cases in
+ * each municipality. In descending order, from
+ * top to bottom
+ * @param {Object<string, number>} covidData 
+ */
 function createChartByMunicipality(covidData) {
   const data = new google.visualization.DataTable();
   data.addColumn('string', '');
@@ -86,6 +100,10 @@ function createChartByMunicipality(covidData) {
   chart.draw(data, google.charts.Bar.convertOptions(options));
 }
 
+/**
+ * Create a histogram with data the age of positive cases
+ * @param {Object<string, number>} covidData 
+ */
 function createChartByAgeRange(covidData) {
   const data = new google.visualization.DataTable();
   data.addColumn('string', '');
@@ -96,6 +114,10 @@ function createChartByAgeRange(covidData) {
   });
 
   const options = {
+    chartArea: {
+      height: '80%',
+      width: '80%'
+    },
     colors: ['red'],
     dataOpacity: .9,
     hAxis: {
@@ -105,7 +127,7 @@ function createChartByAgeRange(covidData) {
       viewWindowMode: 'maximized'
     },
     histogram: { bucketSize: 5},
-    height: 550,
+    height: 400,
     legend: { position: 'none'},
     title: 'Cumulative Confirmed Covid-19 Cases (Age Range)',
     vAxis: {
@@ -113,10 +135,55 @@ function createChartByAgeRange(covidData) {
       format: 'decimal',
       viewWindowMode: 'maximized'
     },
-    width: 950
+    width: 800
   };
 
   const chart = new google.visualization.Histogram(
       document.getElementById('covidByAgeRange-container'));
   chart.draw(data, options);
 }
+
+
+/**
+ * Show the content linked to the clickted tab
+ * @param {Element} tab The button tab that was clicked
+ */
+function openTab(tab) {
+  // Hide all tabs content
+  const tabContents = document.getElementsByClassName('tab-content');
+  for (const content of tabContents) {
+    content.style.height =  '1px';
+    content.style.overflow = 'hidden';
+    content.style.visibility = 'hidden';
+  }
+
+  // Clean any tabLink that has the active class
+  const tabLinks = document.getElementsByClassName('tab-link');
+  for (const link of tabLinks) {
+    link.className = link.className.replace(' active', '');
+  }
+
+  // Show container selected
+  const tabChart = document.getElementById(`${tab.value}-container`); 
+  tabChart.style.height = 'auto';
+  tabChart.style.overflow = 'auto';
+  tabChart.style.visibility = 'visible';
+  tab.className += ' active';
+}
+
+/**
+ * Add a click event to tabs
+ */
+function init() {
+  const tabs = document.getElementsByClassName('tab-link');
+  for (const tab of tabs) {
+    tab.addEventListener('click', (event) => {
+      openTab(event.target);
+    })
+  }
+}
+
+// Set up tabs
+document.addEventListener('DOMContentLoaded', () => {
+  init();
+});
