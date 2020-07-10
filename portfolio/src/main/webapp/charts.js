@@ -12,16 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-google.charts.load('current', {'packages':['corechart', 'bar']});
+google.charts.load('current', { 
+    'packages':['corechart', 'bar', 'geochart'],
+    'mapsApiKey': 'AIzaSyAocmGfmH_sqksYwwYlEOJ_5jjhneLDCxg'
+    });
 google.charts.setOnLoadCallback(drawCharts);
 
 /** Fetches covid data and uses it to create a chart. */
 function drawCharts() {
-  fetch('/get-covidTampsData').then(response => response.json())
+  fetch('/get-covidData').then(response => response.json())
   .then((covidData) => {
     createChartBySex(covidData['covidBySex']);
     createChartByMunicipality(covidData['covidByMunicipality']);
     createChartByAgeRange(covidData['covidByAgeRange']);
+    createChartByState(covidData['deathsByState']);
   });
 }
 
@@ -142,6 +146,29 @@ function createChartByAgeRange(covidData) {
   chart.draw(data, options);
 }
 
+function createChartByState(covidData) {
+  const data = new google.visualization.DataTable();
+  data.addColumn('string', 'State');
+  data.addColumn('number', 'Deaths by Covid-19');
+
+  Object.keys(covidData).forEach((state) => {
+    data.addRow([state, covidData[state]]);
+  });
+
+  const options = {
+    colorAxis: { colors: [
+      'lightgrey', '#999', 
+      'grey', '#666', 'black']
+    },
+    datalessRegionColor: '#fff',
+    region: 'MX',
+    resolution: 'provinces'
+  };
+
+  const chart = new google.visualization.GeoChart(
+    document.getElementById('covidByState-container'));
+  chart.draw(data, options);
+}
 
 /**
  * Show the content linked to the clickted tab

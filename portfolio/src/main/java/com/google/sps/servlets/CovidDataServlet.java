@@ -23,9 +23,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/** Servlet that  */
-@WebServlet("/get-covidTampsData")
-public class CovidTampsDataServlet extends HttpServlet {
+/** Servlet that retrieves data from csv files*/
+@WebServlet("/get-covidData")
+public class CovidDataServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -35,15 +35,17 @@ public class CovidTampsDataServlet extends HttpServlet {
     covidData.put("covidBySex", getDataFromCsv("/WEB-INF/confirmedCovidTampsBySex.csv"));
     covidData.put("covidByMunicipality", getDataFromCsv("/WEB-INF/confirmedCovidTampsByMunicipality.csv"));
     covidData.put("covidByAgeRange", getDataFromCsv("/WEB-INF/confirmedCovidTampsByAgeRange.csv"));
+    covidData.put("deathsByState", getDataFromCsv("/WEB-INF/deathsCovidMxByState.csv"));
 
     response.setContentType("application/json");
     Gson gson = new Gson();
-    String json = gson.toJson(covidData);
-    response.getWriter().println(json);
+    String data = gson.toJson(covidData);
+    response.getWriter().println(data);
   }
 
   /**
-   *
+   * Get data from a csv file.
+   * The structure of the csv needs to be "attribute,value", without headers.
    */
   private LinkedHashMap<String, Integer> getDataFromCsv(String path) {
     LinkedHashMap<String, Integer> data = new LinkedHashMap<String, Integer>();
@@ -62,12 +64,4 @@ public class CovidTampsDataServlet extends HttpServlet {
 
     return data;
   }
-
-  // /**
-  //  * Converts a list into a JSON string using the Gson library.
-  //  */
-  // private String convertListToJson(List list) {
-  //   Gson gson = new Gson();
-  //   return gson.toJson(list);
-  // }
 }
