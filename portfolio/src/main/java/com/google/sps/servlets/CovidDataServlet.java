@@ -15,8 +15,11 @@
 package com.google.sps.servlets;
 
 import com.google.gson.Gson;
+import com.google.sps.data.BadDataException;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Scanner;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -29,13 +32,18 @@ public class CovidDataServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    LinkedHashMap<String, LinkedHashMap<String, Integer>> covidData = 
-        new LinkedHashMap<String, LinkedHashMap<String, Integer>>();
+    Map<String, LinkedHashMap<String, Integer>> covidData = 
+        new HashMap<String, LinkedHashMap<String, Integer>>();
     
-    covidData.put("covidBySex", getDataFromCsv("/WEB-INF/confirmedCovidTampsBySex.csv"));
-    covidData.put("covidByMunicipality", getDataFromCsv("/WEB-INF/confirmedCovidTampsByMunicipality.csv"));
-    covidData.put("covidByAgeRange", getDataFromCsv("/WEB-INF/confirmedCovidTampsByAgeRange.csv"));
-    covidData.put("deathsByState", getDataFromCsv("/WEB-INF/deathsCovidMxByState.csv"));
+    try {
+      covidData.put("covidBySex", getDataFromCsv("/WEB-INF/confirmedCovidTampsBySex.csv"));
+      covidData.put("covidByMunicipality", getDataFromCsv("/WEB-INF/confirmedCovidTampsByMunicipality.csv"));
+      covidData.put("covidByAgeRange", getDataFromCsv("/WEB-INF/confirmedCovidTampsByAgeRange.csv"));
+      covidData.put("deathsByState", getDataFromCsv("/WEB-INF/deathsCovidMxByState.csv"));
+    } catch (Exception ex) {
+      System.out.println(ex);
+      response.sendError(500);
+    }
 
     response.setContentType("application/json");
     Gson gson = new Gson();
@@ -47,7 +55,7 @@ public class CovidDataServlet extends HttpServlet {
    * Get data from a csv file.
    * The structure of the csv needs to be "attribute,value", without headers.
    */
-  private LinkedHashMap<String, Integer> getDataFromCsv(String path) {
+  private LinkedHashMap<String, Integer> getDataFromCsv(String path) throws BadDataException {
     LinkedHashMap<String, Integer> data = new LinkedHashMap<String, Integer>();
     
     Scanner scanner = new Scanner(getServletContext().getResourceAsStream(path));
@@ -55,12 +63,20 @@ public class CovidDataServlet extends HttpServlet {
       String line = scanner.nextLine();
       String[] cells = line.split(",");
 
+      if (cells.length != 2) {
+        throw new BadDataException("Wrong structure of csv. Needs to be 'String,number'");
+      }
+
       String attribute = cells[0];
       Integer value = Integer.parseInt(cells[1]);
 
       data.put(attribute, value);
     }
     scanner.close();
+
+    if (data.isEmpty()) {
+      throw new BadDataException("The csv file was empty");
+    }
 
     return data;
   }

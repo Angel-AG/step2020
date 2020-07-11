@@ -20,12 +20,17 @@ google.charts.setOnLoadCallback(drawCharts);
 
 /** Fetches covid data and uses it to create a chart. */
 function drawCharts() {
-  fetch('/get-covidData').then(response => response.json())
-  .then((covidData) => {
-    createChartBySex(covidData['covidBySex']);
-    createChartByMunicipality(covidData['covidByMunicipality']);
-    createChartByAgeRange(covidData['covidByAgeRange']);
-    createChartByState(covidData['deathsByState']);
+  fetch('/get-covidData').then(response => {
+    if (response.status === 200) {
+      response.json().then((covidData) => {
+        createChartBySex(covidData['covidBySex']);
+        createChartByMunicipality(covidData['covidByMunicipality']);
+        createChartByAgeRange(covidData['covidByAgeRange']);
+        createChartByState(covidData['deathsByState']);
+      });
+    } else {
+      alert('Sorry, something went wrong. Try again later')
+    }
   });
 }
 
