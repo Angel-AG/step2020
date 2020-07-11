@@ -18,15 +18,96 @@ google.charts.load('current', {
     });
 google.charts.setOnLoadCallback(drawCharts);
 
+const DONUT_OPTIONS = { 
+  chartArea: {
+      height: '80%',
+      width: '80%'
+    },
+  legend: {alignment: 'center', position: 'bottom'},
+  pieHole: 0.4,
+  title: '',
+  width: 500,
+  height: 400
+};
+
+const BAR_OPTIONS = {
+  axes: {
+    x: {
+      0: { 
+        side: 'top',
+        range: {min: 0, max: 10000}
+      }
+    }
+  },
+  bars: 'horizontal',
+  chart: {
+    title: ''
+  },
+  colors: ['red'],
+  hAxis: {
+    baselineColor: '#fff',
+    format: 'decimal'
+  },
+  height: 1200,
+  legend: { position: 'none'},
+  width: 800
+}
+
+const HISTO_OPTIONS = {
+  chartArea: {
+    height: '80%',
+    width: '80%'
+  },
+  colors: ['red'],
+  dataOpacity: .9,
+  hAxis: {
+    slantedText: true,
+    slantedTextAngle: 60,
+    showTextEvery: 1,
+    viewWindowMode: 'maximized'
+  },
+  histogram: { bucketSize: 5},
+  height: 400,
+  legend: { position: 'none'},
+  title: '',
+  vAxis: {
+    baselineColor: '#fff',
+    format: 'decimal',
+    viewWindowMode: 'maximized'
+  },
+  width: 800
+};
+
+const GEO_OPTIONS = {
+  colorAxis: { 
+    colors: [
+      'lightgrey', '#999', 
+      'grey', '#666', 'black'
+    ]
+  },
+  datalessRegionColor: '#fff',
+  region: 'MX',
+  resolution: 'provinces',
+  title: ''
+};
+
 /** Fetches covid data and uses it to create a chart. */
 function drawCharts() {
   fetch('/get-covidData').then(response => {
     if (response.status === 200) {
       response.json().then((covidData) => {
-        createChartBySex(covidData['covidBySex']);
-        createChartByMunicipality(covidData['covidByMunicipality']);
-        createChartByAgeRange(covidData['covidByAgeRange']);
-        createChartByState(covidData['deathsByState']);
+        createChart(covidData['covidBySex'],
+            'Covid-19 Cases: Women and Men', 'Sex', 'Covid-19 Cases',
+            'DonutChart', 'covidBySex-container');
+        createChart(covidData['covidByMunicipality'],
+            'Covid-19 Cases by Municipality', 'Municipality', 'Covid-19 Cases',
+            'BarChart', 'covidByMunicipality-container');
+        createChart(covidData['covidByAgeRange'],
+            'Covid-19 Cases by Age Range', 'Case', 'Age',
+            'Histogram', 'covidByAgeRange-container');
+        createChart(covidData['deathsByState'],
+            'Mexico: Deaths by State', 'State', 'Deaths by Covid-19',
+            'GeoChart', 'covidByState-container');
       });
     } else {
       alert('Sorry, something went wrong. Try again later')
@@ -34,145 +115,50 @@ function drawCharts() {
   });
 }
 
-/**
- * Create a donut chart, showing cases by sex.
+/** 
+ * Create a Google Chart according to the arguments passed
  * @param {Object<string, number>} covidData 
+ * @param {string} title The title for the chart
+ * @param {string} col1 The name for the first column of the DataTable
+ * @param {string} col2 The name for the second column of the DataTable
+ * @param {string} chartType The name of the type of chart to create
+ * @param {string} chartContainer The id of the container for the chart
  */
-function createChartBySex(covidData) {
+function createChart(covidData, title, col1, col2, chartType, chartContainer) {
   const data = new google.visualization.DataTable();
-  data.addColumn('string', 'Sex');
-  data.addColumn('number', 'Covid-19 Cases');
+  data.addColumn('string', col1);
+  data.addColumn('number', col2);
 
-  data.addRows([
-    ['Women', covidData['M']],
-    ['Men', covidData['H']]
-  ]);
-
-  const options = {
-    chartArea: {
-      height: '80%',
-      width: '80%'
-    },
-    legend: {alignment: 'center', position: 'bottom'},
-    title: 'Covid-19 Cases: Women and Men',
-    pieHole: 0.4,
-    width: 500,
-    height: 400
-  };
-
-  const chart = new google.visualization.PieChart(
-    document.getElementById('covidBySex-container'));
-  chart.draw(data, options);
-}
-
-/**
- * Create a bar chart showing the no. of cases in
- * each municipality. In descending order, from
- * top to bottom
- * @param {Object<string, number>} covidData 
- */
-function createChartByMunicipality(covidData) {
-  const data = new google.visualization.DataTable();
-  data.addColumn('string', '');
-  data.addColumn('number', 'Covid-19 Cases');
-
-  Object.keys(covidData).forEach((municipality) => {
-    data.addRow([municipality, covidData[municipality]]);
-  });
-  
-  const options = {
-    axes: {
-      x: {
-        0: { 
-          side: 'top',
-          label: 'No. of confirmed cases',
-          range: {min: 0, max: covidData[Object.keys(covidData)[0]]}},
-      }
-    },
-    bars: 'horizontal',
-    chart: {
-      title: 'Cumulative Confirmed Covid-19 Cases (Municipality)'
-    },
-    colors: ['red'],
-    hAxis: {
-      baselineColor: '#fff',
-      format: 'decimal'
-    },
-    height: 1200,
-    legend: { position: 'none'},
-    width: 800
-  };
-
-  const chart = new google.charts.Bar(
-    document.getElementById('covidByMunicipality-container'));
-  chart.draw(data, google.charts.Bar.convertOptions(options));
-}
-
-/**
- * Create a histogram with data the age of positive cases
- * @param {Object<string, number>} covidData 
- */
-function createChartByAgeRange(covidData) {
-  const data = new google.visualization.DataTable();
-  data.addColumn('string', '');
-  data.addColumn('number', 'Covid-19 Cases');
-
-  Object.keys(covidData).forEach((idEntry) => {
-    data.addRow([idEntry, covidData[idEntry]]);
+  Object.keys(covidData).forEach((entry) => {
+    data.addRow([entry, covidData[entry]]);
   });
 
-  const options = {
-    chartArea: {
-      height: '80%',
-      width: '80%'
-    },
-    colors: ['red'],
-    dataOpacity: .9,
-    hAxis: {
-      slantedText: true,
-      slantedTextAngle: 60,
-      showTextEvery: 1,
-      viewWindowMode: 'maximized'
-    },
-    histogram: { bucketSize: 5},
-    height: 400,
-    legend: { position: 'none'},
-    title: 'Cumulative Confirmed Covid-19 Cases (Age Range)',
-    vAxis: {
-      baselineColor: '#fff',
-      format: 'decimal',
-      viewWindowMode: 'maximized'
-    },
-    width: 800
-  };
+  const container = document.getElementById(chartContainer);
 
-  const chart = new google.visualization.Histogram(
-      document.getElementById('covidByAgeRange-container'));
-  chart.draw(data, options);
-}
-
-function createChartByState(covidData) {
-  const data = new google.visualization.DataTable();
-  data.addColumn('string', 'State');
-  data.addColumn('number', 'Deaths by Covid-19');
-
-  Object.keys(covidData).forEach((state) => {
-    data.addRow([state, covidData[state]]);
-  });
-
-  const options = {
-    colorAxis: { colors: [
-      'lightgrey', '#999', 
-      'grey', '#666', 'black']
-    },
-    datalessRegionColor: '#fff',
-    region: 'MX',
-    resolution: 'provinces'
-  };
-
-  const chart = new google.visualization.GeoChart(
-    document.getElementById('covidByState-container'));
-  chart.draw(data, options);
+  let chart;
+  switch (chartType.toLowerCase()) {
+    case 'donutchart':
+      DONUT_OPTIONS.title = title;
+      chart = new google.visualization.PieChart(container);
+      chart.draw(data, DONUT_OPTIONS);
+      break;
+    case 'barchart':
+      BAR_OPTIONS.chart.title = title;
+      BAR_OPTIONS.axes.x[0].range.max = covidData[Object.keys(covidData)[0]];
+      chart = new google.charts.Bar(container);
+      chart.draw(data, google.charts.Bar.convertOptions(BAR_OPTIONS));
+      break;
+    case 'histogram':
+      HISTO_OPTIONS.title = title;
+      chart = new google.visualization.Histogram(container);
+      chart.draw(data, HISTO_OPTIONS);
+      break;
+    case 'geochart':
+      GEO_OPTIONS.title = title;
+      chart = new google.visualization.GeoChart(container);
+      chart.draw(data, GEO_OPTIONS);
+      break;
+  } 
 }
 
 /**
