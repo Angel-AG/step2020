@@ -21,7 +21,7 @@ public final class Comment {
 
   private final long id;
   private final String username;
-  private final String comment;
+  private String comment;
   private final String imageId;
   private final Date date;
 
@@ -31,5 +31,29 @@ public final class Comment {
     this.comment = comment;
     this.imageId = imageId;
     this.date = date;
+  }
+
+  public long getId() {
+    return id;
+  }
+
+  public String getUsername() {
+    return username;
+  }
+
+  public String getComment() {
+    return comment;
+  }
+
+  public String getImageId() {
+    return imageId;
+  }
+
+  public Date getDate() {
+    return date;
+  }
+
+  public void setComment(String comment) {
+    this.comment = comment;
   }
 }
