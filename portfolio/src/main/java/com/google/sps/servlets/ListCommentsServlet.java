@@ -23,6 +23,10 @@ import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.Filter;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.SortDirection;
+import com.google.cloud.translate.Translate;
+import com.google.cloud.translate.TranslateException;
+import com.google.cloud.translate.TranslateOptions;
+import com.google.cloud.translate.Translation;
 import com.google.gson.Gson;
 import com.google.sps.data.Comment;
 import com.google.sps.data.HttpServletUtils;
@@ -46,6 +50,7 @@ public class ListCommentsServlet extends HttpServlet {
     int fetchQuantity = Integer.parseInt(HttpServletUtils.getParameter(request, "quantity", "5"));
     boolean isDateDescending = Boolean.parseBoolean(
         HttpServletUtils.getParameter(request, "dateDescending", "false"));
+    String language = HttpServletUtils.getParameter(request, "language", "");
 
     // A pic id is needed to continue
     if (commentPicId.isEmpty()) {
@@ -58,6 +63,11 @@ public class ListCommentsServlet extends HttpServlet {
     Iterable<Entity> commentsRetrieved = retrieveComments(fetchComments, fetchQuantity);
 
     List<Comment> comments = createCommentsList(commentsRetrieved);
+
+    // Translate comments if a target language was provided
+    if (!language.isEmpty()) {
+      translateComments(comments, language);
+    }
 
     response.setContentType("application/json;");
     response.setCharacterEncoding("UTF-8");
@@ -109,6 +119,25 @@ public class ListCommentsServlet extends HttpServlet {
     }
 
     return comments;
+  }
+
+  /**
+   * Translate comments using the Cloud Translation API
+   */
+  private void translateComments(List<Comment> comments, String targetLang) {
+    try {
+      Translate translate = TranslateOptions.getDefaultInstance().getService();
+      
+      for (Comment comment : comments) {
+        Translation translation = translate.translate(
+            comment.getComment(),
+            Translate.TranslateOption.targetLanguage(targetLang));
+
+        comment.setComment(translation.getTranslatedText());
+      }
+    } catch (TranslateException exc) {
+      System.out.println(exc);
+    }
   }
 
   /**

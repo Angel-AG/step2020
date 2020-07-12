@@ -20,7 +20,7 @@ const GET_PARAMS = new URLSearchParams ({
   imageId: '',
   quantity: '5',
   dateDescending: 'true',
-  language: 'en'
+  language: ''
 });
 
 /**
@@ -99,6 +99,11 @@ function getSupportedLanguages() {
         const selectLang = document.getElementById('language');
 
         addLanguageOptionsToDom(languages, selectLang);
+
+        selectLang.addEventListener('change', (event) => {
+          GET_PARAMS.set('language', event.target.value);
+          getComments();
+        });
       });
     } else {
       alert("Oopsie, it seems the translate option is not working right now");
@@ -143,7 +148,7 @@ function init() {
     deleteAllComments(event.target.value);
   });
 
-  // Get supported languages
+  // Get supported languages for translation functionality
   getSupportedLanguages();
 }
 
