@@ -60,6 +60,7 @@ public class ListCommentsServlet extends HttpServlet {
     List<Comment> comments = createCommentsList(commentsRetrieved);
 
     response.setContentType("application/json;");
+    response.setCharacterEncoding("UTF-8");
     response.getWriter().println(convertListToJson(comments));
   }
 
