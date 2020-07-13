@@ -129,34 +129,38 @@ function createChart(covidData, title, col1, col2, chartType, chartContainer) {
   data.addColumn('string', col1);
   data.addColumn('number', col2);
 
-  Object.keys(covidData).forEach((entry) => {
-    data.addRow([entry, covidData[entry]]);
-  });
+  for (const [entry, value] of Object.entries(covidData)) {
+    data.addRow([entry, value]);
+  }
 
   const container = document.getElementById(chartContainer);
 
   let chart;
   switch (chartType.toLowerCase()) {
     case 'donutchart':
-      DONUT_OPTIONS.title = title;
+      const donutOptions = DONUT_OPTIONS;
+      donutOptions.title = title;
       chart = new google.visualization.PieChart(container);
-      chart.draw(data, DONUT_OPTIONS);
+      chart.draw(data, donutOptions);
       break;
     case 'barchart':
-      BAR_OPTIONS.chart.title = title;
-      BAR_OPTIONS.axes.x[0].range.max = covidData[Object.keys(covidData)[0]];
+      const barOptions = BAR_OPTIONS;
+      barOptions.chart.title = title;
+      barOptions.axes.x[0].range.max = covidData[Object.keys(covidData)[0]];
       chart = new google.charts.Bar(container);
-      chart.draw(data, google.charts.Bar.convertOptions(BAR_OPTIONS));
+      chart.draw(data, google.charts.Bar.convertOptions(barOptions));
       break;
     case 'histogram':
-      HISTO_OPTIONS.title = title;
+      const histoOptions = HISTO_OPTIONS;
+      histoOptions.title = title;
       chart = new google.visualization.Histogram(container);
-      chart.draw(data, HISTO_OPTIONS);
+      chart.draw(data, histoOptions);
       break;
     case 'geochart':
-      GEO_OPTIONS.title = title;
+      const geoOptions = GEO_OPTIONS;
+      geoOptions.title = title;
       chart = new google.visualization.GeoChart(container);
-      chart.draw(data, GEO_OPTIONS);
+      chart.draw(data, geoOptions);
       break;
   } 
 }
@@ -177,7 +181,7 @@ function openTab(tab) {
   // Clean any tabLink that has the active class
   const tabLinks = document.getElementsByClassName('tab-link');
   for (const link of tabLinks) {
-    link.className = link.className.replace(' active', '');
+    link.classList.remove('active');
   }
 
   // Show container selected
@@ -185,7 +189,7 @@ function openTab(tab) {
   tabChart.style.height = 'auto';
   tabChart.style.overflow = 'auto';
   tabChart.style.visibility = 'visible';
-  tab.className += ' active';
+  tab.classList.add('active');
 }
 
 /**
