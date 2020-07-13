@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>My Portfolio</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="charts.js"></script>
+    <script src="reusehtml.js"></script>
+  </head>
+  <body>
+    <div id="header" include-html="header.html"></div>
+    <div class="row">
+      <div id="nav" include-html="navbar.html"></div>
+      <div id="content">
+        <article>
+          <h2>Covid-19 Cases in Tamaulipas, Mexico (July 9, 2020)</h2>
+          <div class="tabs-container">
+            <button value="covidBySex" class="tab-link">By Sex</button>
+            <button value="covidByMunicipality" class="tab-link">By Municipality</button>
+            <button value="covidByAgeRange" class="tab-link">By Age Range</button>
+          </div>
+          <div id="tab-content-container">
+            <div id="covidBySex-container" class="tab-content"></div>
+            <div id="covidByMunicipality-container" class="tab-content"></div>
+            <div id="covidByAgeRange-container" class="tab-content"></div>
+          </div>
+          <h2>Deaths by State (Mexico - July 9, 2020)</h2>
+          <div id="covidByState-container"></div>
+        </article>
+      </div>
+    </div>
+    <div id="footer" include-html="footer.html"></div>
+  </body>
+</html>
