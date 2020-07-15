@@ -19,7 +19,8 @@
 const GET_PARAMS = new URLSearchParams ({
   imageId: '',
   quantity: '5',
-  dateDescending: 'true'
+  dateDescending: 'true',
+  language: ''
 });
 
 /**
@@ -29,7 +30,7 @@ function deleteAllComments(imageId) {
   const postParams = new URLSearchParams();
   postParams.append('imageId', imageId);
 
-  fetch('/delete-comments', {method: 'POST', body: postParams}).then(response => {
+  fetch('/delete-comments', {method: 'POST', body: postParams}).then((response) => {
     if (response.status === 200) {
       getComments();
     } else {
@@ -89,6 +90,44 @@ function addCommentsToDom(comments, container) {
 }
 
 /**
+ * Fetches the supported languages of the translation API
+ */
+function getSupportedLanguages() {
+  fetch('/get-supported-languages').then((response) => {
+    if (response.status === 200) {
+      response.json().then((languages) => {
+        const selectLang = document.getElementById('language');
+
+        addLanguageOptionsToDom(languages, selectLang);
+
+        selectLang.addEventListener('change', (event) => {
+          GET_PARAMS.set('language', event.target.value);
+          getComments();
+        });
+      });
+    } else {
+      alert("Oopsie, it seems the translate option is not working right now");
+    }
+  });
+}
+
+/**
+ * Adds language options to a select element
+ * @param {!Array<{Object}>} languages The language options
+ * @param {Element} selectElement The select element
+ */
+function addLanguageOptionsToDom(languages, selectElement) {
+  for (const language of languages) {
+    const option = document.createElement('option');
+
+    option.textContent = language.name;
+    option.setAttribute('value', language.code);
+
+    selectElement.appendChild(option);
+  }
+}
+
+/**
  * Set up functions for when comment section events are triggered
  */
 function init() {
@@ -108,6 +147,9 @@ function init() {
   document.getElementById('delete-comments').addEventListener('click', (event) => {
     deleteAllComments(event.target.value);
   });
+
+  // Get supported languages for translation functionality
+  getSupportedLanguages();
 }
 
 // Set up comments when DOM is loaded
