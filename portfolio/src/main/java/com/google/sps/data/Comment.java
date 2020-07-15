@@ -21,14 +21,14 @@ public final class Comment {
 
   private final long id;
   private final String username;
-  private String comment;
+  private String text;
   private final String imageId;
   private final Date date;
 
-  public Comment(long id, String username, String comment, String imageId, Date date) {
+  public Comment(long id, String username, String text, String imageId, Date date) {
     this.id = id;
     this.username = username;
-    this.comment = comment;
+    this.text = text;
     this.imageId = imageId;
     this.date = date;
   }
@@ -41,8 +41,8 @@ public final class Comment {
     return username;
   }
 
-  public String getComment() {
-    return comment;
+  public String getText() {
+    return text;
   }
 
   public String getImageId() {
@@ -53,7 +53,7 @@ public final class Comment {
     return date;
   }
 
-  public void setComment(String comment) {
-    this.comment = comment;
+  public void setText(String text) {
+    this.text = text;
   }
 }

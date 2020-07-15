@@ -130,10 +130,10 @@ public class ListCommentsServlet extends HttpServlet {
       
       for (Comment comment : comments) {
         Translation translation = translate.translate(
-            comment.getComment(),
+            comment.getText(),
             Translate.TranslateOption.targetLanguage(targetLang));
 
-        comment.setComment(translation.getTranslatedText());
+        comment.setText(translation.getTranslatedText());
       }
     } catch (TranslateException exc) {
       System.out.println(exc);
