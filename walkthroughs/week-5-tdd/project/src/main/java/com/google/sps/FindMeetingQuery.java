@@ -21,22 +21,20 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /** 
  * Query to find all the possible time slots for a requested meeting.
- * If there are one or more possible time slots that works for both
+ * If there are one or more possible time slots that work for both
  * mandatory and optional attendees, return this.
- * If not return only possible time slots that works for the mandatory attendees.
+ * Else, return only possible time slots that work for the mandatory attendees.
  */
 public final class FindMeetingQuery {
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
     Collection<String> attendees = request.getAttendees();
     long duration = request.getDuration();
 
-    List<Event> byStartTime = events.stream()
-        .sorted(Comparator.comparing(Event::getWhen, TimeRange.ORDER_BY_START))
-        .collect(Collectors.toList());
+    List<Event> byStartTime = new ArrayList<>(events);
+    byStartTime.sort(Comparator.comparing(Event::getWhen, TimeRange.ORDER_BY_START));
 
     Collection<String> allAttendees = new HashSet<>();
     allAttendees.addAll(attendees);
