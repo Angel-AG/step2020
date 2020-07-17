@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 
 /** 
  * Query to find all the possible time slots for a requested meeting.
- * If there is at least one possible time slot that works for both
+ * If there are one or more possible time slots that works for both
  * mandatory and optional attendees, return this.
  * If not return only possible time slots that works for the mandatory attendees.
  */
