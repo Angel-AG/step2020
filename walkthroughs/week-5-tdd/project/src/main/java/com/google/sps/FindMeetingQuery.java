@@ -20,7 +20,7 @@ import java.util.Collection;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,21 +29,18 @@ public final class FindMeetingQuery {
     Collection<String> attendees = request.getAttendees();
     long duration = request.getDuration();
 
-    // Request duration longer than a day -> no meetings
-    if (duration > TimeRange.WHOLE_DAY.duration()) {
-      return Arrays.asList();
-    }
-
-    // No attendees or events -> meetings whole day
-    if (attendees.isEmpty() || events.isEmpty()) {
-      return Arrays.asList(TimeRange.WHOLE_DAY);
-    }
-
     List<Event> byStartTime = events.stream()
         .sorted(Comparator.comparing(Event::getWhen, TimeRange.ORDER_BY_START))
         .collect(Collectors.toList());
 
-    List<TimeRange> freeSlots = findPossibleTimeSlots(byStartTime, attendees, duration);
+    Collection<String> allAttendees = new HashSet<>();
+    allAttendees.addAll(attendees);
+    allAttendees.addAll(request.getOptionalAttendees());
+
+    List<TimeRange> freeSlots = findPossibleTimeSlots(byStartTime, allAttendees, duration);
+    if (freeSlots.isEmpty()) {
+      freeSlots = findPossibleTimeSlots(byStartTime, attendees, duration);
+    }
     
     return freeSlots;
   }
@@ -54,11 +51,6 @@ public final class FindMeetingQuery {
     int endTime = 0;
     for (Event ev : sortedEvents) {
       if (!Collections.disjoint(ev.getAttendees(), attendees)) {
-        if (endTime == 0) {
-          addTimeSlot(timeSlots, TimeRange.START_OF_DAY, ev.getWhen().start(), false, duration);
-          endTime = ev.getWhen().end();
-        }
-
         if (ev.getWhen().start() >= endTime) {
           addTimeSlot(timeSlots, endTime, ev.getWhen().start(), false, duration);
           endTime = ev.getWhen().end();
