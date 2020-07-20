@@ -14,10 +14,67 @@
 
 package com.google.sps;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
 
+/** 
+ * Query to find all the possible time slots for a requested meeting.
+ * If there are one or more possible time slots that work for both
+ * mandatory and optional attendees, return this.
+ * Else, return only possible time slots that work for the mandatory attendees.
+ */
 public final class FindMeetingQuery {
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
-    throw new UnsupportedOperationException("TODO: Implement this method.");
+    Collection<String> attendees = request.getAttendees();
+    long duration = request.getDuration();
+
+    List<Event> byStartTime = new ArrayList<>(events);
+    byStartTime.sort(Comparator.comparing(Event::getWhen, TimeRange.ORDER_BY_START));
+
+    Collection<String> allAttendees = new HashSet<>();
+    allAttendees.addAll(attendees);
+    allAttendees.addAll(request.getOptionalAttendees());
+
+    List<TimeRange> freeSlots = findPossibleTimeSlots(byStartTime, allAttendees, duration);
+    if (freeSlots.isEmpty()) {
+      freeSlots = findPossibleTimeSlots(byStartTime, attendees, duration);
+    }
+    
+    return freeSlots;
+  }
+
+  /** 
+   * Return a list with TimeRanges that indicates the possible times for a requested meeting 
+   * with n attendees and x duration, avoiding overlapping with their scheduled events
+   */
+  private List<TimeRange> findPossibleTimeSlots(Collection<Event> sortedEvents, Collection<String> attendees, long duration) {
+    List<TimeRange> timeSlots = new ArrayList<>();
+    
+    int endTime = 0;
+    for (Event ev : sortedEvents) {
+      if (!Collections.disjoint(ev.getAttendees(), attendees)) {
+        if (ev.getWhen().start() >= endTime) {
+          addTimeSlot(timeSlots, endTime, ev.getWhen().start(), false, duration);
+        }
+
+        endTime = Math.max(ev.getWhen().end(), endTime);
+      }
+    }
+
+    addTimeSlot(timeSlots, endTime, TimeRange.END_OF_DAY, true, duration);
+
+    return timeSlots;
+  }
+
+  /** Add a TimeRange to a list if there is room between start and end points */
+  private void addTimeSlot(List<TimeRange> timesList, int start, int end, boolean inclusive, long duration) {
+    if (start + duration <= end) {
+      timesList.add(TimeRange.fromStartEnd(start, end, inclusive));
+    }
   }
 }
